@@ -1,5 +1,6 @@
 """ Code to do a basic Reddit pull using the hottest topics on a subreddit.  Simple bot to track posts
 Aisha Pectyo, 8/8/2017"""
+#Documentation: http://praw.readthedocs.io/en/latest/tutorials/reply_bot.html
 
 #---Import Libraries---#
 import praw
