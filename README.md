@@ -5,13 +5,12 @@
 - 1.2    Validate with team
     
 *2.Select target data*
-- 2.1. Select data and supporting citation data to be scraped
+- 2.1. Define data and supporting citation data to be scraped
     
 *3. Identify Ontology tags applicable to target data for classification*
-- 3.1. Define mapping of target DB ontology onto SODI's ontology - see KCS mapping examples in [SODI ontology doc](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=570911882)
-   - 3.1.1 Define rules - [see KCS-mapping examples](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=1531718387)
+- 3.1. In a new csv, define mapping of target DB ontology onto SODI's ontology and rules to be followed - [see KCS-mapping examples](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=1531718387)
     
-- 3.2. If no tags in [SODI ontology doc](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=570911882) are applicable, use tags of your choosing
+- 3.2. If the target DB cannot be accuratel defined without including tags not already present in [SODI ontology doc](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=570911882) are applicable, use tags of your choosing
     - 3.2.1 Properly define and reference the new tag(s) you use in the [SODI ontology doc](https://docs.google.com/spreadsheets/d/1DkbxDBdbYkVYgzq5rciWsLBGdYJnBjKu284Wf8BeTc0/edit#gid=570911882)
       
  - 3.3 Scrape sample set of data (Max 1000 terms and/or relationships, whichever comes first) and upload for review
