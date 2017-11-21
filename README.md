@@ -3,7 +3,7 @@
 *1. Select DB*
     - 1.1. Pick a structured or unstructured Open Access DB (Data usable for any purpose)
     
-    - 1.2. Validate with the team
+    - 1.2 Validate with team
     
 *2.Select target data*
     - 2.1. Select data and supporting citation data to be scraped
