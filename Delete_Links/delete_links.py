@@ -11,8 +11,6 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
-links_file = 'All links.json'
-created_CSV_file = 'output_All deleted.csv'
 database = 'links.db'
 
 #only run if need to recreate table
@@ -26,7 +24,7 @@ def deleteTable():
 		print(e)
 	finally:
 		conn.close()
-def loadDatabase():
+def loadDatabase(links_file):
 	deleteTable()
 	with open(links_file,'r+') as f:
 		data = json.load(f)
@@ -78,53 +76,44 @@ def getID(link1,link2):
 
 	return -1;
 
-#links = load_links()
-loadDatabase()
-full_links = pd.read_json(links_file)
-full_links['_from'].apply(str)
-full_links['_to'].apply(str)
-full_links['_from'] = (full_links['_from'].str.extract('(\d+)'))
-full_links['_to'] = (full_links['_to'].str.extract('(\d+)'))
+if __name__ == '__main__':
+	if(len(sys.argv) != 3):
+		print("USAGE: python delete_links.py [Input JSON Links File] [Name of output csv file]")
+		print("If there is a space in any of the files, put the name in quotes \"[NAME]\" ")
+		print("Example: python link_recursion.py \"All links.json\" output.csv ")
+	else:
+		links_file = sys.argv[1]#'All links.json'
+		created_CSV_file = sys.argv[2]#'output_All deleted.csv'
+		#links = load_links()
+		loadDatabase(links_file)
+		full_links = pd.read_json(links_file)
+		full_links['_from'].apply(str)
+		full_links['_to'].apply(str)
+		full_links['_from'] = (full_links['_from'].str.extract('(\d+)'))
+		full_links['_to'] = (full_links['_to'].str.extract('(\d+)'))
 
-links = pd.concat([full_links['_from'],full_links['_to']],axis=1)
+		links = pd.concat([full_links['_from'],full_links['_to']],axis=1)
 
-print links.head()
-'''with open(created_CSV_file, 'w+') as csvfile:
-	writer = csv.writer(csvfile,lineterminator = '\n')
-	count = 0.0
-	length = len(links)
-	print length
+		print links.head()
+		links = links[links.duplicated(keep=False)]
 
-	for full_link in links:
-		count = count + 1
-		if (count % 25 == 0):
-			print (count * 100 / length, '%')
+		df1 = (links.groupby(links.columns.tolist())
+		       .apply(lambda x: tuple(x.index))
+		       .reset_index(name='idx'))
 
-		for full_link_2 in links:
-			if(full_link != full_link_2):
-				if(full_link.id1 == full_link_2.id1 and full_link_2.id2 == full_link.id2):
-					print("Deleted: " + str(full_link.id1) + " " +str(full_link.id2))
-					writer.writerow(['DL',str(full_link.id1),str(full_link.id2)])
-'''
-links = links[links.duplicated(keep=False)]
-
-df1 = (links.groupby(links.columns.tolist())
-       .apply(lambda x: tuple(x.index))
-       .reset_index(name='idx'))
-
-count = 0.0
-length = len(df1)
-with open(created_CSV_file, 'w+') as csvfile:
-	writer = csv.writer(csvfile,lineterminator = '\n')
-	print df1
-	for index, row in df1.iterrows():
-		count = count + 1
-		if (count % 100 == 0):
-			print (count * 100 / length, '%')
-		correct, actual = verify(row['_from'],row['_to'],len(row['idx']))
-		link_id = getID(row['_from'],row['_to'])
-		if correct:
-			writer.writerow(['DL',str(link_id)])#str(row['_from']),str(row['_to'])])
-			continue
-		else:
-			print row['_from'], row['_to'], len(row['idx']), actual
+		count = 0.0
+		length = len(df1)
+		with open(created_CSV_file, 'w+') as csvfile:
+			writer = csv.writer(csvfile,lineterminator = '\n')
+			print df1
+			for index, row in df1.iterrows():
+				count = count + 1
+				if (count % 100 == 0):
+					print (count * 100 / length, '%')
+				correct, actual = verify(row['_from'],row['_to'],len(row['idx']))
+				link_id = getID(row['_from'],row['_to'])
+				if correct:
+					writer.writerow(['DL',str(link_id)])#str(row['_from']),str(row['_to'])])
+					continue
+				else:
+					print row['_from'], row['_to'], len(row['idx']), actual

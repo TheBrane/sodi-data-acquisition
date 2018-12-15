@@ -7,34 +7,38 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
-august_nodes_file = 'nodes.csv'
-links_file = 'links.csv'
-created_CSV_file = 'new_no_dups.csv'
-
 class Link:
 	def __init__(self, id1, id2):
 		self.id1 = id1
 		self.id2 = id2
-def load_nodes():
-	''' Loads a dictionary of nodes from the backup file
-		Returns:
-			dictionary where key is name and value is string ID
-	'''
-	nodes = dict()
-	with open(august_nodes_file,'r+') as f:
-		reader = csv.reader(f)
-		for row in reader:
-			a_id = str(row[0])
-			name = str(row[1])
-			nodes[name] = a_id
+def load_nodes(nodes_file):
+	nodes = list()
+	with open(nodes_file) as f:
+		data = json.load(f)
+		for i in range(len(data)):
+			a_id = str(data[i]['_key'])
+			name = str(data[i]['t'])
+			cluster = "";
+			if(data[i].get('cl') != None):
+				cluster = data[i].get('cl')
+			if(cluster == "TRUE"):
+				continue
+			if(data[i].get('a') == None or data[i]['a'].get('description') == None):
+				definition = ""
+			else:
+				definition = str(data[i]['a']['description'])
+			if(definition != "" and definition != "Enter a definition" and definition != "Add a definition"):
+				nodes.append(Node(name,a_id,definition))
 	return nodes
-def load_links():
+def load_links(links_file):
 	links = list()
 	with open(links_file,'r+') as f:
-		reader = csv.reader(f)
-		for row in reader:
-			id_1 = str(row[1])
-			id_2 = str(row[2])
+		data = json.load(f)
+		for i in range(len(data)):
+			key1 = str(data[i]['_from'])
+			id_1 = key1[6:]
+			key2 = str(data[i]['_to'])
+			id_2 = key2[6:]
 			links.append(Link(id_1,id_2))
 	return links
 def getHTML(url):
@@ -228,8 +232,12 @@ def link_exists(links, id_1, id_2):
 	return False
 
 def main():
-	links = load_links()
-	nodes = load_nodes()
+	nodes_file = sys.argv[1]
+	links_file = sys.argv[2]
+	created_CSV_file = sys.argv[3]
+	
+	links = load_links(links_file)
+	nodes = load_nodes(nodes_file)
 
 	start_url = 'https://en.wikipedia.org/wiki/'
 	length = len(nodes)
@@ -307,4 +315,9 @@ def main():
 				print(csv_id,database_id,title)
 				create_link(csv_id,database_id,title) #Anything in the CSV is guaranteed to not be in the database and not be a cluster		
 if __name__ == '__main__':
-	main()
+	if(len(sys.argv) != 3):
+		print("USAGE: python link_recursion.py [Input JSON Nodes File] [Input JSON Links File] [Name of output csv file]")
+		print("If there is a space in any of the files, put the name in quotes \"[NAME]\" ")
+		print("Example: python link_recursion.py \"All nodes.json\" \"All links.json\" output.csv ")
+	else:
+		main()

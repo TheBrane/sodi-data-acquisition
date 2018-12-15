@@ -8,19 +8,13 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 sys.stdout = codecs.getwriter('utf8')(sys.stdout)
 
-#input file
-#august_nodes_file = 'ALL NODES_ALL.csv' #backup file containing ID in first column and name of node in second column
-october_nodes_file = 'ALL NODES - 06-10-2018.json'
-#output file
-created_CSV_file = 'fixed.csv' #file that is created
-
-def loadNodesCSV():
+def loadNodesCSV(nodes_file):
 	''' Loads a dictionary of nodes from the backup file
 		Returns:
 			dictionary where key is name and value is string ID
 	'''
 	nodes = dict()
-	with open(august_nodes_file,'r+') as f:
+	with open(nodes_file,'r+') as f:
 		reader = csv.reader(f)
 		for row in reader:
 			a_id = str(row[0])
@@ -29,9 +23,9 @@ def loadNodesCSV():
 			if(definition == "" or definition == "Enter a definition"):
 				nodes[name] = a_id
 	return nodes
-def loadNodesJSON():
+def loadNodesJSON(nodes_file):
 	nodes = dict()
-	with open(october_nodes_file) as f:
+	with open(nodes_file) as f:
 		data = json.load(f)
 		for i in range(len(data)):
 			a_id = str(data[i]['_key'])
@@ -128,66 +122,75 @@ def splitAndLower(words):
 		all_words[i] = all_words[i].strip()
 	return all_words
 
-august_nodes = loadNodesJSON()
-start_url = 'https://en.wikipedia.org/wiki/'
-count = 0.0
-with open(created_CSV_file, 'w+') as csvfile:
-	length = len(august_nodes)
-	writer = csv.writer(csvfile,lineterminator = '\n')
-	print length
-	for title,a_id in august_nodes.iteritems():
-		#print progress
-		count = count + 1
-		if (count % 25 == 0):
-			print (count * 100 / length, '%')
-		#change ? to -
-		if('?' in title):
-			title = title.replace("?","-")
-		#query wikipedia
-		url = start_url + title
-		soup = getHTML(url)
-		if(soup == None):
-			continue
-		#Don't bother if is stub
-		if(isStub(soup)):
-			print(url," is stub\n")
-			continue
-		#get title and first paragraph
-		article_title = getTitle(soup)
-		if article_title == 'Error':
-			continue
-		paragraph = ""
-		titles_in_paragraph = list()
-		every = soup.find('div',{'class': 'mw-parser-output'})
-		if every == None:
-			continue
-		else:
-			every = every.findAll('p')
+if __name__ == '__main__':
+	if(len(sys.argv) != 3):
+		print("USAGE: python fetch_urls_and_descriptions.py [Input JSON File] [Name of output csv file]")
+		print("If there is a space in any of the files, put the name in quotes \"[NAME]\" ")
+		print("Example: python fetch_urls_and_descriptions.py \"ALL NODES - 06-10-2018.json\" fixed.csv")
+	else:
+		nodes_file = sys.argv[1] #backup file containing ID in first column and name of node in second column, ie 'ALL NODES - 06-10-2018.json'
+		created_CSV_file = sys.argv[2] #ie fixed.csv
 
-		for p in every:
-			potentialParagraph = extractTextFromParagraph(p).encode('utf-8')
-			
-			#If the title is in the paragraph, then it is most likely legitimate
-			if article_title.lower() in potentialParagraph.lower():
-				paragraph = potentialParagraph
-				break
-			elif '(' in article_title and ')' in article_title:
-				if(article_title[:article_title.find('(')].strip().lower() in potentialParagraph.lower()):
-					paragraph = potentialParagraph
-					break
-			else:
-				flag = False
-				all_words = splitAndLower(article_title)
-				for w in all_words:
-					if not flag and w.lower().strip() in potentialParagraph.lower():
+		nodes = loadNodesJSON(nodes_file)
+		start_url = 'https://en.wikipedia.org/wiki/'
+		count = 0.0
+		with open(created_CSV_file, 'w+') as csvfile:
+			length = len(nodes)
+			writer = csv.writer(csvfile,lineterminator = '\n')
+			print length
+			for title,a_id in nodes.iteritems():
+				#print progress
+				count = count + 1
+				if (count % 25 == 0):
+					print (count * 100 / length, '%')
+				#change ? to -
+				if('?' in title):
+					title = title.replace("?","-")
+				#query wikipedia
+				url = start_url + title
+				soup = getHTML(url)
+				if(soup == None):
+					continue
+				#Don't bother if is stub
+				if(isStub(soup)):
+					print(url," is stub\n")
+					continue
+				#get title and first paragraph
+				article_title = getTitle(soup)
+				if article_title == 'Error':
+					continue
+				paragraph = ""
+				titles_in_paragraph = list()
+				every = soup.find('div',{'class': 'mw-parser-output'})
+				if every == None:
+					continue
+				else:
+					every = every.findAll('p')
+
+				for p in every:
+					potentialParagraph = extractTextFromParagraph(p).encode('utf-8')
+					
+					#If the title is in the paragraph, then it is most likely legitimate
+					if article_title.lower() in potentialParagraph.lower():
 						paragraph = potentialParagraph
-						flag = True
-				if flag:
-					break
-		#Really annoying if there's latex in the paragraph, so just skipping those pages
-		if('{\displaystyle' in paragraph or 'alt=' in paragraph):
-			paragraph = ""
-		#This node needs to be updated
-		if paragraph != "" and "may refer to" not in paragraph:
-			#print("UN,"+str(a_id)+","+str(article_title)+ ",description," + paragraph.encode('utf-8') + "," + url)
-			writer.writerow(['UN',str(a_id),str(article_title),'description',paragraph,url])
+						break
+					elif '(' in article_title and ')' in article_title:
+						if(article_title[:article_title.find('(')].strip().lower() in potentialParagraph.lower()):
+							paragraph = potentialParagraph
+							break
+					else:
+						flag = False
+						all_words = splitAndLower(article_title)
+						for w in all_words:
+							if not flag and w.lower().strip() in potentialParagraph.lower():
+								paragraph = potentialParagraph
+								flag = True
+						if flag:
+							break
+				#Really annoying if there's latex in the paragraph, so just skipping those pages
+				if('{\displaystyle' in paragraph or 'alt=' in paragraph):
+					paragraph = ""
+				#This node needs to be updated
+				if paragraph != "" and "may refer to" not in paragraph:
+					#print("UN,"+str(a_id)+","+str(article_title)+ ",description," + paragraph.encode('utf-8') + "," + url)
+					writer.writerow(['UN',str(a_id),str(article_title),'description',paragraph,url])
