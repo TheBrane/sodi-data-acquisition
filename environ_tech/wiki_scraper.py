@@ -5,10 +5,6 @@
    of topics related to AI and categorize them using The Brane's Knowledge Classification System of tags. This program
    successfully creates nodes and links in a CSV file with a false positive rate of less than 10%.
 '''
-
-
-#CHANGE HOW TO LOAD FILE
-
 import requests
 import csv
 from BeautifulSoup import *
