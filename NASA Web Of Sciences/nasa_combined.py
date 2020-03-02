@@ -1770,7 +1770,7 @@ def connect_all(df_dd, untagged_keywords, dict_json, link_key_val):
      '_type']]
 
     df_pre_topic = df_pre_topic[df_pre_topic['_type'] != 'link']
-    df_topic = result2.iloc[:,:6]
+    df_topic = df_pre_topic.iloc[:,:6]
     df_link = result[['l_key','_type','name','_from', '_to']]
     df_link['definition'] = ''
     cols = df_link.columns.tolist()
@@ -1784,12 +1784,13 @@ def connect_all(df_dd, untagged_keywords, dict_json, link_key_val):
 
 
 def pro_a_combine(df_topic, df_link, new_topics, new_links):
-		#combine protocol A results with previous links and topics
     topic_dict = df_topic.to_dict(orient='records')
     link_dict = df_link.to_dict(orient='records')
+    topic_key_val = int(df_topic['_key'].iloc[-1][1:])+1
+    link_key_val = int(df_link['_key'].iloc[-1][1:])+1
     new_topics = new_topics + topic_dict
     new_links = new_links + link_dict
-    return new_topics, new_links
+    return new_topics, new_links, topic_key_val, link_key_val
 
 def main():
 	# Create list of topics
@@ -1854,7 +1855,7 @@ def main():
 	print("Connecting Nodes")
 	df_link, df_topic = connect_all(df_deduplicated, untagged_keywords, new_topics, link_key_val)
 	print("combining jsons")
-	new_topics, new_links = pro_a_combine(df_topic, df_link, new_topics, new_links)
+	new_topics, new_links, topic_key_val,link_key_val = pro_a_combine(df_topic, df_link, new_topics, new_links)
 
 	print("Outputting to files")
 	# Output topics to file
