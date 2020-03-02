@@ -9,6 +9,17 @@ import csv
 import numpy as np
 import pandas as pd
 
+import requests
+import inflection as inf
+from collections import OrderedDict
+from nltk.corpus import wordnet as wn
+import nltk
+nltk.download('wordnet')
+import warnings
+warnings.filterwarnings('ignore')
+
+
+
 class Convert_Clusters():
 	def __init__(self):
 		print("Create clusters")
@@ -1458,6 +1469,328 @@ def output_to_file(info, file):
 			i = i + 1
 		f.write(']')
 
+
+
+""" 
+		Protocol A 
+		Tashlin Reddy
+		March 2020 
+
+"""
+
+#define helper functions
+def wordnet_exits(word, wn_lemmas):
+    word = word.replace(' ', '_')
+    if word in wn_lemmas:
+        return True
+    else:
+        return False
+
+def acquire_definition(keyword):
+    define = wn.synsets(keyword)[0].definition()
+    return define
+
+def acquire_hypernym(keyword):
+    hypernym = wn.synsets(keyword)[0].hypernyms()[0].name().split(".")[0]
+    return hypernym
+
+def acquire_wordnet_id(keyword):
+    synset = wn.synsets(keyword)[0].name()
+    ss = wn.synset(synset)
+    offset = str(ss.offset()).zfill(8) + '-' + ss.pos()
+    return offset
+
+def get_link_key(df, link_key_val):
+    key_link = list(range(link_key_val+1, link_key_val+df.shape[0]+1))
+    results = list(map(str, key_link))
+    results = ['L'+ s for s in results]
+    return results
+
+def get_topic_key(df, topic_key_val):
+    key_topic = list(range(topic_key_val+1, topic_key_val+df.shape[0]+1))
+    results = list(map(str, key_topic))
+    results = ['T'+ s for s in results]
+    return results
+
+# read and clean function
+def read_clean(web_of_science_path):
+    df = pd.read_csv(web_of_science_path)
+    
+    df_filter = df[['TI','DE','ID' , 'DI']]
+    df_filter['DE'] = df_filter['DE'].str.replace('; ', ', ')
+    df_filter['ID'] = df_filter['ID'].str.replace('; ', ', ')
+    df_filter['DE'] = df_filter['DE'].str.replace('-', ' ')
+    df_filter['ID'] = df_filter['ID'].str.replace('-', ' ')
+    df_filter['DE'] = df_filter['DE'].fillna(' ')
+    df_filter['ID'] = df_filter['ID'].fillna(' ')
+
+    # 2. Combine keyword columns
+    df_filter['keywords'] = df_filter['DE'] + ', ' + df_filter['ID']
+
+    # 3. lowercase keyword case
+    df_filter['keywords'] = df_filter['keywords'].str.lower()
+    df_filter = df_filter[['TI','keywords' , 'DI']]
+
+    # 5. Remove duplicates
+    # https://stackoverflow.com/questions/47316783/python-dataframe-remove-duplicate-words-in-the-same-cell-within-a-column-in-pyt
+    df_filter['keywords'] = (df_filter['keywords'].str.split(', ')
+                                  .apply(lambda x: OrderedDict.fromkeys(x).keys())
+                                  .str.join(', '))
+    # 6. Split strings
+    df_filter['keywords'] = df_filter['keywords'].str.split(', ', expand=False)
+
+    # 7. pandas explode - Transform each element of a list-like to a row, replicating the index values.
+    df_explode = df_filter.explode('keywords')
+    df_explode = df_explode[df_explode['keywords'] != ' ']
+    df_explode.reset_index(inplace=True, drop=True)
+
+    df_explode_unique = df_explode.drop_duplicates(['keywords'])
+    df_explode_unique.reset_index(drop=True, inplace=True)
+    df_clean = df_explode_unique.copy()
+
+    df_clean.rename(columns={'TI': 'topic_title', 'keywords': 'definition', 
+                           'DI': 'reference' }, inplace=True)
+    df_clean['definition'] = df_clean['definition'].str.replace('^mar$', 'mars', regex=True)
+    
+    return df_clean
+
+#extract wordnet IDs and deduplicate
+def get_wordnet(df_test_, topic_key_val):
+    wn_lemmas = set(wn.all_lemma_names())
+    data = []
+    untagged_keywords = []
+    j = 1
+    for index, row in df_test_.iterrows():
+    #     print('index: ', index, 'keywords: ', row['definition'])
+        if wordnet_exits(row['definition'], wn_lemmas):
+            word = row['definition']
+            word = word.replace(' ', '_')
+    #         print('Word exists in WordNet')
+    #         print('*****************')
+    #         print('j: ', j)
+            key = 'T' + str(j)
+    #         print('initial key: ', key)
+            data.append(dict(zip(
+                ('key',
+                 'type', 
+                 'topic_title', 
+                 'definition', 
+                 'reference',
+                'wordnet_ID'), 
+                (key,
+                'topic',
+                 row['topic_title'],
+                 word,  
+                 '',
+               acquire_wordnet_id(word))
+            )))
+            j = j + 1
+    #         print('j: ', j)
+            key = 'T' + str(j)
+    #         print('key: ', key)
+            data.append(dict(zip(
+                ('key',
+                 'type', 
+                 'topic_title', 
+                 'definition', 
+                 'reference',
+                'wordnet_ID'), 
+                (key,
+                'topic',
+                 word,
+                 acquire_definition(word),  
+                 '',
+                acquire_wordnet_id(word))
+            )))
+            try:
+                hypernym = acquire_hypernym(word)
+                j = j + 1
+    #             print('j: ', j)
+                key = 'T' + str(j)
+    #             print('key: ', key)
+
+                data.append(dict(zip(
+                    ('key',
+                     'type', 
+                     'topic_title', 
+                     'definition', 
+                     'reference',
+                    'wordnet_ID'), 
+                    (key,
+                    'cluster',
+                     hypernym,
+                     acquire_definition(hypernym),  
+                     '',
+                    acquire_wordnet_id(hypernym))
+                )))
+            except:
+                pass
+            j = j + 1
+    #         print('j: ', j)
+            key = 'T' + str(j)
+    #         print('key: ', key)
+            # repeat for i >= 4 through 9
+            i = 4
+            df_topic = pd.DataFrame(data)    
+        else:
+            untagged_keywords.append(row['definition'])
+    #         print('Word DOES NOT exists in WordNet')
+    #         print('*****************')
+
+    untagged_keywords.sort()
+
+    df_drop = df_topic.drop_duplicates(['topic_title', 'type', 'definition'])
+    df_drop['dup'] = df_drop[['topic_title','definition']].duplicated(keep=False)
+    df_drop.loc[df_drop.dup == True, 'type'] = "cluster"
+    df_drop2 = df_drop.drop_duplicates(['topic_title', 'type', 'definition'])
+    df_drop2.drop(['dup'], axis=1, inplace=True)
+    df_deduplicated = df_drop2.copy()
+    df_deduplicated['key'] = get_topic_key(df_deduplicated, topic_key_val)
+    
+    return df_deduplicated, untagged_keywords
+
+
+#connect nodes
+def connect_all(df_dd, untagged_keywords, dict_json, link_key_val):
+		#read in previous protocols to get keys
+    df_json = pd.DataFrame(dict_json)
+    #create new empty dataframe
+    df = pd.DataFrame()
+    #get list of wordnetID's to iterate through
+    wordnet_list = list(df_dd['wordnet_ID'].unique())
+    #for each wordnetID create linked nodes
+    for word in wordnet_list:
+        df_sub = df_dd[df_dd['wordnet_ID']  == word]
+        df_sub['_type'] = ''
+        df_sub['_from'] = ''
+        df_sub['_to'] = '' 
+        df_sub['name'] = ''
+        shape = df_sub.shape
+        to_list = []
+        from_list = []
+        if shape[0]>1:
+            try:
+                key_word = list(set(df_sub['topic_title']).intersection(df_sub['definition']))[0]  
+                for i in range(0,len(df_sub)):
+                    if df_sub['topic_title'].iloc[i] == key_word and df_sub['type'].iloc[i] == 'cluster':
+                        df_sub['_type'].iloc[i] = "hasSubclass"
+                        to_list.append(df_sub['key'])
+                    elif df_sub['topic_title'].iloc[i] == key_word and df_sub['type'].iloc[i] == 'topic':
+                        df_sub['_type'].iloc[i] = "hasInstance"
+                        df_sub['_to'].iloc[i] = df_sub['key'].iloc[i]
+                    elif df_sub['definition'].iloc[i] == key_word and df_sub['type'].iloc[i] == 'topic':
+                        df_sub['_type'].iloc[i] = "link"
+                        df_sub['_from'].iloc[i] = list(df_json[df_json['title']==df_sub['topic_title'].iloc[i]]['_key'])[0]
+                        df_sub['name'].iloc[i] = 'mentions'
+                    else:
+                        multi_list = df_sub[~df_sub['topic_title'].str.contains(' ')]['topic_title'].to_list()
+                        df_hold = pd.DataFrame()
+                        for multi_word in multi_list:
+                            df_sub_multi = df_sub[(df_sub['topic_title']==multi_word) | (df_sub['definition']==multi_word)]
+                            df_sub_multi['_type'] = ''
+                            df_sub_multi['_from'] = ''
+                            df_sub_multi['_to'] = '' 
+                            for i in range(0,len(df_sub_multi)):
+                                if df_sub_multi['topic_title'].iloc[i] == multi_word and df_sub_multi['type'].iloc[i] == 'cluster':
+                                    df_sub_multi['_type'].iloc[i] = "hasSubclass"
+                                elif df_sub_multi['topic_title'].iloc[i] == multi_word and df_sub_multi['type'].iloc[i] == 'topic':
+                                    df_sub_multi['_type'].iloc[i] = "hasInstance"
+                                    df_sub_multi['_to'].iloc[i] = df_sub_multi['key'].iloc[i]
+                                elif df_sub_multi['definition'].iloc[i] == multi_word and df_sub_multi['type'].iloc[i] == 'topic':
+                                    df_sub_multi['_type'].iloc[i] = "link"
+                                    df_sub_multi['_from'].iloc[i] = list(df_json[df_json['title']==df_sub_multi['topic_title'].iloc[i]]['_key'])[0]
+                                    df_sub_multi['name'].iloc[i] = 'mentions'
+                            df_hold = df_hold.append(df_sub_multi)
+                        df_sub = df_hold
+            except:
+                if df_sub['type'].iloc[0] == 'cluster':
+                    df_sub['_type'] = "alone cluster"
+                    df_sub['_from'] = "T100"
+        elif shape[0]==1:
+            if df_sub['type'].iloc[0] == 'cluster':
+                df_sub['_type'] = "alone cluster"
+                df_sub['_from'] = "T100"           
+        else:
+            df_sub['_type'] = 'Unknown'
+        df = df.append(df_sub)
+        df['l_key'] = get_link_key(df, link_key_val)
+
+    df.sort_index(inplace = True)
+    link_list = []
+    for i in range(0,len(df)-1):  
+        if df['type'].iloc[i] == 'cluster' and df['type'].iloc[i+1] == 'topic':
+            df.iloc[i]['_type'] = 'hasSubclass'
+            df.iloc[i]['_from'] = 'T96'
+            df.iloc[i]['_to'] = df.iloc[i]['key']
+            df.iloc[i-1]['_from'] = df.iloc[i]['key']
+        elif df['type'].iloc[i] == 'cluster':
+            df.iloc[i]['_to'] = df.iloc[i]['key']
+        elif df['_type'].iloc[i] == 'link':
+            link_list.append(df.iloc[i]['key'])
+        elif df['_type'].iloc[i] == 'hasInstance':
+            to_key = df.iloc[i]['key']
+            for link_key in link_list:
+                df['_to'][df['key']==link_key] = to_key
+            link_list = []
+            if df['_from'].iloc[i]=='':
+                df['_from'].iloc[i] = 'T25'
+    for i in range(0,len(df)):
+        if df['type'].iloc[i] != 'cluster':
+            df['wordnet_ID'].iloc[i] = ''
+
+    df.reset_index(drop=True)
+    get_last = int(df_dd.iloc[-1]['key'][1:])
+    #get_last = int(df['key'].iloc[-1][1:])
+    unique_new_list = list(set(untagged_keywords))
+    unique_new_list.sort()
+
+    new_key = ['T'+ str(get_last + i) for i in range(1,len(unique_new_list)+1)]
+    new_from = ['T26' for i in range(1,len(unique_new_list)+1)]
+    new_to = ['Ty' for i in range(1,len(unique_new_list)+1)]
+    l_type = ['hasInstance' for i in range(1,len(unique_new_list)+1)]
+    t_type = ['Topic' for i in range(1,len(unique_new_list)+1)]
+
+    d = {'key': new_key, 'topic_title': unique_new_list,'type':t_type, '_from':new_from, '_to':new_to, '_type':l_type}
+    df_untag = pd.DataFrame(data=d)
+
+    #result is combined link and topic 
+    result = df.append(df_untag)
+    result.fillna('', inplace=True)
+    result.reset_index(drop=True, inplace=True)
+    #result['l_key'] = result['key'].apply(get_link_key)
+    result['l_key'] = get_link_key(result, link_key_val)
+
+    #split result into topic and link
+    df_pre_topic = result[['key',
+     'type',
+     'topic_title',
+     'definition',
+     'reference',
+     'wordnet_ID',
+     '_type']]
+
+    df_pre_topic = df_pre_topic[df_pre_topic['_type'] != 'link']
+    df_topic = result2.iloc[:,:6]
+    df_link = result[['l_key','_type','name','_from', '_to']]
+    df_link['definition'] = ''
+    cols = df_link.columns.tolist()
+    cols = cols[:3]+cols[-1:]+cols[3:5]
+    df_link = df_link[cols]
+
+    df_link.rename(columns={"l_key": "_key"}, inplace=True)
+    df_topic.rename(columns={"key": "_key", "type":"_type", "topic_title": "title"}, inplace=True)
+    
+    return df_link, df_topic
+
+
+def pro_a_combine(df_topic, df_link, new_topics, new_links):
+		#combine protocol A results with previous links and topics
+    topic_dict = df_topic.to_dict(orient='records')
+    link_dict = df_link.to_dict(orient='records')
+    new_topics = new_topics + topic_dict
+    new_links = new_links + link_dict
+    return new_topics, new_links
+
 def main():
 	# Create list of topics
 	new_topics = list()
@@ -1512,6 +1845,16 @@ def main():
 	organization_topics, organization_links, topic_key_val, link_key_val = organization_runner.convert_organizations(data, topic_key_val, link_key_val, researcher_topics, publication_topics)
 	new_topics = add_new_topics(new_topics, organization_topics)
 	new_links = add_new_links(new_links, organization_links)
+
+	print("Classifying ISS Keywords")
+	print("Protocol A")
+	df_clean = read_clean('data.csv')
+	print("Extracting wordnet tags")
+	df_deduplicated, untagged_keywords = get_wordnet(df_clean, topic_key_val)
+	print("Connecting Nodes")
+	df_link, df_topic = connect_all(df_deduplicated, untagged_keywords, new_topics, link_key_val)
+	print("combining jsons")
+	new_topics, new_links = pro_a_combine(df_topic, df_link, new_topics, new_links)
 
 	print("Outputting to files")
 	# Output topics to file
