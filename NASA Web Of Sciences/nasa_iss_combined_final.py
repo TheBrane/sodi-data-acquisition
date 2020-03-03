@@ -3242,6 +3242,15 @@ def pro_a_combine(df_topic, df_link, new_topics, new_links):
 	new_links = new_links + link_dict
 	return new_topics, new_links, topic_key_val, link_key_val
 
+def find_missing_links(topics, links):
+	topic_ids = set()
+	removed_links = list()
+	for topic in topics:
+		topic_ids.add(topic['_key'])
+	removed_links = [link for link in links if (link['_from'] not in topic_ids or link['_to'] not in topic_ids)]
+	links = [link for link in links if (link['_from'] in topic_ids and link['_to'] in topic_ids)]
+	return topics, links, removed_links
+
 def main():
 	# Create list of topics
 	new_topics = list()
@@ -3340,10 +3349,14 @@ def main():
 	new_topics = add_new_topics(new_topics, principal_investigator_topics)
 	new_links = add_new_links(new_links, principal_investigator_links)
 
+	new_topics, new_links, missing_links = find_missing_links(new_topics, new_links)
+
 	print("Outputting to files")
 	# Output topics to file
-	output_to_file(new_topics, 'output/combined_topics.json')
-	output_to_file(new_links, 'output/combined_links.json')
+	output_to_file(new_topics, 'output/topic_output.json')
+	output_to_file(new_links, 'output/link_output.json')
+	output_to_file(missing_links, 'output/links_removed.json')
+
 
 if __name__ == '__main__':
 	main()
