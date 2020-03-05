@@ -25,6 +25,9 @@ class Convert_Clusters():
 		cluster_links = list()
 		properties = dict()
 
+		final_topic = 0
+		final_link = 0
+
 		# Create generic properties
 		properties['_key'] = ''
 		properties['_type'] = ''
@@ -530,6 +533,9 @@ class Convert_Clusters():
 		properties['title'] = 'University'
 		cluster_topics.append(self.create_topic(properties))
 
+		# Change this if more topics added!
+		final_topic = 97
+
 		# Create Links
 		properties = dict()
 		properties['_key'] = ''
@@ -592,12 +598,6 @@ class Convert_Clusters():
 		properties['_from'] = 'T4'
 		properties['_to'] = 'T8'
 		cluster_links.append(self.create_link(properties))
-		# L9
-		properties['_key'] = 'L9'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T4'
-		properties['_to'] = 'T9'
-		cluster_links.append(self.create_link(properties))
 		# L10	
 		properties['_key'] = 'L10'
 		properties['_type'] = 'hasSubclass'
@@ -645,6 +645,12 @@ class Convert_Clusters():
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T24'
 		properties['_to'] = 'T26'
+		cluster_links.append(self.create_link(properties))
+		# L18
+		properties['_key'] = 'L18'
+		properties['_type'] = 'hasSubclass'
+		properties['_from'] = 'T4'
+		properties['_to'] = 'T9'
 		cluster_links.append(self.create_link(properties))
 		# L19	
 		properties['_key'] = 'L19'
@@ -1049,7 +1055,11 @@ class Convert_Clusters():
 		properties['_to'] = 'T97'
 		cluster_links.append(self.create_link(properties))
 
-		return cluster_topics, cluster_links, len(cluster_topics) + 1, len(cluster_links) + 1
+		# Change this if more links added!
+		final_link = 86
+
+		# T28, L25 are missing. 
+		return cluster_topics, cluster_links, final_topic + 1, final_link + 1
 	def create_topic(self, properties):
 		topic_json_struct = {}
 		for prop, value in properties.items():
@@ -3261,8 +3271,15 @@ def pro_a_combine(df_topic, df_link, new_topics, new_links):
 def find_missing_links(topics, links):
 	topic_ids = set()
 	removed_links = list()
+	link_ids = set()
 	for topic in topics:
+		if topic['_key'] in topic_ids:
+			print(topic)
 		topic_ids.add(topic['_key'])
+	for link in links:
+		if link['_key'] in link_ids:
+			print(link)
+		link_ids.add(link['_key'])
 	removed_links = [link for link in links if (link['_from'] not in topic_ids or link['_to'] not in topic_ids)]
 	links = [link for link in links if (link['_from'] in topic_ids and link['_to'] in topic_ids)]
 	return topics, links, removed_links
