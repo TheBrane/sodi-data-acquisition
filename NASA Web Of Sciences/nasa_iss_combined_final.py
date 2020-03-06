@@ -232,11 +232,6 @@ class Convert_Clusters():
 		properties['_type'] = 'cluster'
 		properties['title'] = 'Location'
 		cluster_topics.append(self.create_topic(properties))
-		# T38
-		properties['_key'] = 'T38'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Category'
-		cluster_topics.append(self.create_topic(properties))
 		# T39
 		properties['_key'] = 'T39'
 		properties['_type'] = 'cluster'
@@ -245,12 +240,12 @@ class Convert_Clusters():
 		# T40
 		properties['_key'] = 'T40'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Animal Biology - Invertebrates'
+		properties['title'] = 'Animal Biology - Invertebrates investigation'
 		cluster_topics.append(self.create_topic(properties))
 		# T41
 		properties['_key'] = 'T41'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Animal Biology - Vertebrates'
+		properties['title'] = 'Animal Biology - Vertebrates investigation'
 		cluster_topics.append(self.create_topic(properties))
 		# T42
 		properties['_key'] = 'T42'
@@ -330,7 +325,7 @@ class Convert_Clusters():
 		# T57
 		properties['_key'] = 'T57'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Student-Developed Investigations'
+		properties['title'] = 'Student-Developed Investigations investigation'
 		cluster_topics.append(self.create_topic(properties))
 		# T58
 		properties['_key'] = 'T58'
@@ -430,7 +425,7 @@ class Convert_Clusters():
 		# T77
 		properties['_key'] = 'T77'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Air, Water and Surface Monitoring'
+		properties['title'] = 'Air, Water and Surface Monitoring investigation'
 		cluster_topics.append(self.create_topic(properties))
 		# T78
 		properties['_key'] = 'T78'
@@ -601,464 +596,464 @@ class Convert_Clusters():
 		# L10	
 		properties['_key'] = 'L10'
 		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T10'
-		properties['_to'] = 'T11'
+		properties['_from'] = 'T4'
+		properties['_to'] = 'T9'
 		cluster_links.append(self.create_link(properties))
 		# L11	
 		properties['_key'] = 'L11'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T10'
-		properties['_to'] = 'T12'
+		properties['_to'] = 'T11'
 		cluster_links.append(self.create_link(properties))
 		# L12	
 		properties['_key'] = 'L12'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T10'
-		properties['_to'] = 'T13'
+		properties['_to'] = 'T12'
 		cluster_links.append(self.create_link(properties))
 		# L13	
 		properties['_key'] = 'L13'
 		properties['_type'] = 'hasSubclass'
+		properties['_from'] = 'T10'
+		properties['_to'] = 'T13'
+		cluster_links.append(self.create_link(properties))
+		# L14
+		properties['_key'] = 'L14'
+		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T21'
 		properties['_to'] = 'T22'
 		cluster_links.append(self.create_link(properties))
-		# L14	
-		properties['_key'] = 'L14'
+		# L15
+		properties['_key'] = 'L15'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T21'
 		properties['_to'] = 'T23'
 		cluster_links.append(self.create_link(properties))
-		# L15	
-		properties['_key'] = 'L15'
+		# L16
+		properties['_key'] = 'L16'
 		properties['_type'] = 'encompasses'
 		properties['_from'] = 'T1'
 		properties['_to'] = 'T24'
 		cluster_links.append(self.create_link(properties))
-		# L16	
-		properties['_key'] = 'L16'
+		# L17
+		properties['_key'] = 'L17'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T24'
 		properties['_to'] = 'T25'
 		cluster_links.append(self.create_link(properties))
-		# L17	
-		properties['_key'] = 'L17'
+		# L18
+		properties['_key'] = 'L18'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T24'
 		properties['_to'] = 'T26'
 		cluster_links.append(self.create_link(properties))
-		# L18
-		properties['_key'] = 'L18'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T4'
-		properties['_to'] = 'T9'
-		cluster_links.append(self.create_link(properties))
-		# L19	
+		# L19
 		properties['_key'] = 'L19'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T21'
 		properties['_to'] = 'T29'
 		cluster_links.append(self.create_link(properties))
-		# L20	
+		# L20
 		properties['_key'] = 'L20'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T21'
 		properties['_to'] = 'T30'
 		cluster_links.append(self.create_link(properties))
-		# L21	
+		# L21
 		properties['_key'] = 'L21'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T2'
 		properties['_to'] = 'T31'
 		cluster_links.append(self.create_link(properties))
-		# L22	
+		# L22
 		properties['_key'] = 'L22'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T37'
 		properties['_to'] = 'T32'
 		cluster_links.append(self.create_link(properties))
-		# L23	
+		# L23
 		properties['_key'] = 'L23'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T37'
 		properties['_to'] = 'T33'
 		cluster_links.append(self.create_link(properties))
-		# L24	
+		# L24
 		properties['_key'] = 'L24'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T37'
 		properties['_to'] = 'T34'
 		cluster_links.append(self.create_link(properties))
-		# L26	
-		properties['_key'] = 'L26'
+		# L25
+		properties['_key'] = 'L25'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T39'
 		cluster_links.append(self.create_link(properties))
-		# L27	
-		properties['_key'] = 'L27'
+		# L26
+		properties['_key'] = 'L26'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T48'
 		cluster_links.append(self.create_link(properties))
-		# L28	
-		properties['_key'] = 'L28'
+		# L27
+		properties['_key'] = 'L27'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T53'
 		cluster_links.append(self.create_link(properties))
-		# L29	
-		properties['_key'] = 'L29'
+		# L28
+		properties['_key'] = 'L28'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T58'
 		cluster_links.append(self.create_link(properties))
-		# L30	
-		properties['_key'] = 'L30'
+		# L29
+		properties['_key'] = 'L29'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T70'
 		cluster_links.append(self.create_link(properties))
-		# L31	
-		properties['_key'] = 'L31'
+		# L30
+		properties['_key'] = 'L30'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T27'
 		properties['_to'] = 'T76'
 		cluster_links.append(self.create_link(properties))
-		# L32	
-		properties['_key'] = 'L32'
+		# L31
+		properties['_key'] = 'L31'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T40'
 		cluster_links.append(self.create_link(properties))
-		# L33	
-		properties['_key'] = 'L33'
+		# L32
+		properties['_key'] = 'L32'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T41'
 		cluster_links.append(self.create_link(properties))
-		# L34	
-		properties['_key'] = 'L34'
+		# L33
+		properties['_key'] = 'L33'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T42'
 		cluster_links.append(self.create_link(properties))
-		# L35	
-		properties['_key'] = 'L35'
+		# L34
+		properties['_key'] = 'L34'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T43'
 		cluster_links.append(self.create_link(properties))
-		# L36	
-		properties['_key'] = 'L36'
+		# L35
+		properties['_key'] = 'L35'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T44'
 		cluster_links.append(self.create_link(properties))
-		# L37	
-		properties['_key'] = 'L37'
+		# L36
+		properties['_key'] = 'L36'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T45'
 		cluster_links.append(self.create_link(properties))
-		# L38	
-		properties['_key'] = 'L38'
+		# L37
+		properties['_key'] = 'L37'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T46'
 		cluster_links.append(self.create_link(properties))
-		# L39	
-		properties['_key'] = 'L39'
+		# L38
+		properties['_key'] = 'L38'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T39'
 		properties['_to'] = 'T47'
 		cluster_links.append(self.create_link(properties))
-		# L40	
-		properties['_key'] = 'L40'
+		# L39
+		properties['_key'] = 'L39'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T48'
 		properties['_to'] = 'T49'
 		cluster_links.append(self.create_link(properties))
-		# L41	
-		properties['_key'] = 'L41'
+		# L40
+		properties['_key'] = 'L40'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T48'
 		properties['_to'] = 'T50'
 		cluster_links.append(self.create_link(properties))
-		# L42	
-		properties['_key'] = 'L42'
+		# L41
+		properties['_key'] = 'L41'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T48'
 		properties['_to'] = 'T51'
 		cluster_links.append(self.create_link(properties))
-		# L43	
-		properties['_key'] = 'L43'
+		# L42
+		properties['_key'] = 'L42'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T48'
 		properties['_to'] = 'T52'
 		cluster_links.append(self.create_link(properties))
-		# L44	
-		properties['_key'] = 'L44'
+		# L43
+		properties['_key'] = 'L43'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T53'
 		properties['_to'] = 'T54'
 		cluster_links.append(self.create_link(properties))
-		# L45	
-		properties['_key'] = 'L45'
+		# L44
+		properties['_key'] = 'L44'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T53'
 		properties['_to'] = 'T55'
 		cluster_links.append(self.create_link(properties))
-		# L46	
-		properties['_key'] = 'L46'
+		# L45
+		properties['_key'] = 'L45'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T53'
 		properties['_to'] = 'T56'
 		cluster_links.append(self.create_link(properties))
-		# L47	
-		properties['_key'] = 'L47'
+		# L46
+		properties['_key'] = 'L46'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T53'
 		properties['_to'] = 'T57'
 		cluster_links.append(self.create_link(properties))
-		# L48	
-		properties['_key'] = 'L48'
+		# L47
+		properties['_key'] = 'L47'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T59'
 		cluster_links.append(self.create_link(properties))
-		# L49	
-		properties['_key'] = 'L49'
+		# L48
+		properties['_key'] = 'L48'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T60'
 		cluster_links.append(self.create_link(properties))
-		# L50	
-		properties['_key'] = 'L50'
+		# L49
+		properties['_key'] = 'L49'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T61'
 		cluster_links.append(self.create_link(properties))
-		# L51	
-		properties['_key'] = 'L51'
+		# L50
+		properties['_key'] = 'L50'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T62'
 		cluster_links.append(self.create_link(properties))
-		# L52	
-		properties['_key'] = 'L52'
+		# L51
+		properties['_key'] = 'L51'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T63'
 		cluster_links.append(self.create_link(properties))
-		# L53	
-		properties['_key'] = 'L53'
+		# L52
+		properties['_key'] = 'L52'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T64'
 		cluster_links.append(self.create_link(properties))
-		# L54	
-		properties['_key'] = 'L54'
+		# L53
+		properties['_key'] = 'L53'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T65'
 		cluster_links.append(self.create_link(properties))
-		# L55	
-		properties['_key'] = 'L55'
+		# L54
+		properties['_key'] = 'L54'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T66'
 		cluster_links.append(self.create_link(properties))
-		# L56	
-		properties['_key'] = 'L56'
+		# L55
+		properties['_key'] = 'L55'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T67'
 		cluster_links.append(self.create_link(properties))
-		# L57	
-		properties['_key'] = 'L57'
+		# L56
+		properties['_key'] = 'L56'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T68'
 		cluster_links.append(self.create_link(properties))
-		# L58	
-		properties['_key'] = 'L58'
+		# L57
+		properties['_key'] = 'L57'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T58'
 		properties['_to'] = 'T69'
 		cluster_links.append(self.create_link(properties))
-		# L59	
-		properties['_key'] = 'L59'
+		# L58
+		properties['_key'] = 'L58'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T70'
 		properties['_to'] = 'T71'
 		cluster_links.append(self.create_link(properties))
-		# L60	
-		properties['_key'] = 'L60'
+		# L59
+		properties['_key'] = 'L59'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T70'
 		properties['_to'] = 'T72'
 		cluster_links.append(self.create_link(properties))
-		# L61	
-		properties['_key'] = 'L61'
+		# L60
+		properties['_key'] = 'L60'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T70'
 		properties['_to'] = 'T73'
 		cluster_links.append(self.create_link(properties))
-		# L62	
-		properties['_key'] = 'L62'
+		# L61
+		properties['_key'] = 'L61'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T70'
 		properties['_to'] = 'T74'
 		cluster_links.append(self.create_link(properties))
-		# L63	
-		properties['_key'] = 'L63'
+		# L62
+		properties['_key'] = 'L62'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T70'
 		properties['_to'] = 'T75'
 		cluster_links.append(self.create_link(properties))
-		# L64	
-		properties['_key'] = 'L64'
+		# L63
+		properties['_key'] = 'L63'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T77'
 		cluster_links.append(self.create_link(properties))
-		# L65	
-		properties['_key'] = 'L65'
+		# L64
+		properties['_key'] = 'L64'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T78'
 		cluster_links.append(self.create_link(properties))
-		# L66	
-		properties['_key'] = 'L66'
+		# L65
+		properties['_key'] = 'L65'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T79'
 		cluster_links.append(self.create_link(properties))
-		# L67	
-		properties['_key'] = 'L67'
+		# L66
+		properties['_key'] = 'L66'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T80'
 		cluster_links.append(self.create_link(properties))
-		# L68	
-		properties['_key'] = 'L68'
+		# L67
+		properties['_key'] = 'L67'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T81'
 		cluster_links.append(self.create_link(properties))
-		# L69	
-		properties['_key'] = 'L69'
+		# L68
+		properties['_key'] = 'L68'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T82'
 		cluster_links.append(self.create_link(properties))
-		# L70	
-		properties['_key'] = 'L70'
+		# L69
+		properties['_key'] = 'L69'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T83'
 		cluster_links.append(self.create_link(properties))
-		# L71	
-		properties['_key'] = 'L71'
+		# L70
+		properties['_key'] = 'L70'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T84'
 		cluster_links.append(self.create_link(properties))
-		# L72	
-		properties['_key'] = 'L72'
+		# L71
+		properties['_key'] = 'L71'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T85'
 		cluster_links.append(self.create_link(properties))
-		# L73	
-		properties['_key'] = 'L73'
+		# L72
+		properties['_key'] = 'L72'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T86'
 		cluster_links.append(self.create_link(properties))
-		# L74	
-		properties['_key'] = 'L74'
+		# L73
+		properties['_key'] = 'L73'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T87'
 		cluster_links.append(self.create_link(properties))
-		# L75	
-		properties['_key'] = 'L75'
+		# L74
+		properties['_key'] = 'L74'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T88'
 		cluster_links.append(self.create_link(properties))
-		# L76	
-		properties['_key'] = 'L76'
+		# L75
+		properties['_key'] = 'L75'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T89'
 		cluster_links.append(self.create_link(properties))
-		# L77	
-		properties['_key'] = 'L77'
+		# L76
+		properties['_key'] = 'L76'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T90'
 		cluster_links.append(self.create_link(properties))
-		# L78	
-		properties['_key'] = 'L78'
+		# L77
+		properties['_key'] = 'L77'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T91'
 		cluster_links.append(self.create_link(properties))
-		# L79	
-		properties['_key'] = 'L79'
+		# L78
+		properties['_key'] = 'L78'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T92'
 		cluster_links.append(self.create_link(properties))
-		# L80	
-		properties['_key'] = 'L80'
+		# L79
+		properties['_key'] = 'L79'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T93'
 		cluster_links.append(self.create_link(properties))
-		# L81	
-		properties['_key'] = 'L81'
+		# L80
+		properties['_key'] = 'L80'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T94'
 		cluster_links.append(self.create_link(properties))
-		# L82	
-		properties['_key'] = 'L82'
+		# L81
+		properties['_key'] = 'L81'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T76'
 		properties['_to'] = 'T95'
 		cluster_links.append(self.create_link(properties))
-		# L83	
-		properties['_key'] = 'L83'
+		# L82
+		properties['_key'] = 'L82'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T36'
 		properties['_to'] = 'T4'
 		cluster_links.append(self.create_link(properties))
-		# L84	
-		properties['_key'] = 'L84'
+		# L83
+		properties['_key'] = 'L83'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T36'
 		properties['_to'] = 'T10'
 		cluster_links.append(self.create_link(properties))
-		# L85	
-		properties['_key'] = 'L85'
+		# L84
+		properties['_key'] = 'L84'
 		properties['_type'] = 'encompasses'
 		properties['_from'] = 'T1'
 		properties['_to'] = 'T96'
 		cluster_links.append(self.create_link(properties))
-		# L86	
-		properties['_key'] = 'L86'
+		# L85
+		properties['_key'] = 'L85'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T21'
 		properties['_to'] = 'T97'
 		cluster_links.append(self.create_link(properties))
 
 		# Change this if more links added!
-		final_link = 86
+		final_link = 85
 
-		# T28, L25 are missing. 
+		# T28, T38 missing
 		return cluster_topics, cluster_links, final_topic + 1, final_link + 1
 	def create_topic(self, properties):
 		topic_json_struct = {}
@@ -2280,21 +2275,6 @@ class Convert_Investigations():
 			# Store in list to output at end
 			investigation_topics.append(topic_json_struct)
 
-			link_key = 'L' + str(link_key_val)
-			# Increment key value for next link
-			link_key_val = link_key_val + 1
-
-			# (2) Output link to JSON format between investigation and T27
-			link_json_struct = {}
-			link_json_struct['_key'] = link_key
-			link_json_struct['_type'] = 'hasInstance'
-			link_json_struct['name'] = ''
-			link_json_struct['_from'] = 'T27' 
-			link_json_struct['_to'] = topic_key
-
-			# Store in list to output at end
-			investigation_links.append(link_json_struct)
-
 			# (3) Link between subcategory and investigation ID
 			found = False
 			subcategory_id = -1
@@ -2902,6 +2882,7 @@ def delete_topics(old_topics, topics_to_delete):
 
 def delete_links(old_links, links_to_delete):
 	for link in links_to_delete:
+		print("DELETING: " + link["_to"] + " to " + link['_from'])
 		old_links.remove(link)
 	return old_links
 
@@ -3192,7 +3173,7 @@ def connect_tagged(df_dd, dict_json):
     df.sort_index(inplace = True)
     link_list = []
     for i in range(0,len(df)-1):
-        if df['type'].iloc[i] == 'cluster' and df['type'].iloc[i+1] == 'topic':
+        if df['type'].iloc[i] == 'cluster'and df['type'].iloc[i+1] == 'topic':
             df.iloc[i]['_type'] = 'hasSubclass'
             df.iloc[i]['_from'] = 'T96'
             df.iloc[i]['_to'] = df.iloc[i]['key']
