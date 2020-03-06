@@ -1514,6 +1514,13 @@ def get_topic_key(df, topic_key_val):
     results = ['T'+ s for s in results]
     return results, topic_key_val_new
 
+def capitalize_first_letter(some_string):
+    try:
+        new_string = some_string[0].upper() + some_string[1:].lower()
+        return new_string
+    except:
+        return some_string
+
 # read and clean function
 def read_clean(web_of_science_path):
     df = pd.read_csv(web_of_science_path)
@@ -1789,7 +1796,9 @@ def join_tagged_untagged(df_tagged, df_untagged, link_key_val):
     df_pre_topic = df_pre_topic[df_pre_topic['_type'] != 'link']
     df_topic = df_pre_topic.iloc[:,:6]
     df_topic.rename(columns={"key": "_key", "type":"_type", "topic_title": "title"}, inplace=True)
-    
+    df_topic['title'] = df_topic['title'].apply(capitalize_first_letter)
+    df_topic['definition'] = df_topic['definition'].apply(capitalize_first_letter)
+
     df_link = df[['_type','name','_from', '_to']]
     df_link['definition'] = ''
     df_link['_key'] = get_link_key(df_link, link_key_val)
