@@ -2282,8 +2282,9 @@ def output_to_file(info, file):
 
 
 
-""" 
-		Protocol A 
+
+"""
+Protocol A 
 		Tashlin Reddy
 		March 2020 
 
@@ -2327,6 +2328,14 @@ def capitalize_first_letter(some_string):
         return new_string
     except:
         return some_string
+    
+def remove_underscore(some_string):
+    try:
+        new_string = some_string.replace('_', ' ')
+        return new_string
+    except:
+        return some_string
+    
 
 # read and clean function
 def read_clean(web_of_science_path):
@@ -2359,8 +2368,11 @@ def read_clean(web_of_science_path):
     df_explode = df_filter.explode('keywords')
     df_explode = df_explode[df_explode['keywords'] != ' ']
     df_explode.reset_index(inplace=True, drop=True)
-
+    df_explode['keywords'] = df_explode['keywords'].apply(lambda x: ' '.join([inf.singularize(item) for item in x.split()]))
     df_explode_unique = df_explode.drop_duplicates(['keywords'])
+    
+    """Add deduplicating and singularize"""
+    
     df_explode_unique.reset_index(drop=True, inplace=True)
     df_clean = df_explode_unique.copy()
 
@@ -2465,6 +2477,41 @@ def connect_nodes(df_clean, dict_json, topic_key_val):
         })
     return df
 
+def remove_duplicates(df):
+    df_nolink = df[df['_type']!= 'link']
+    #deduplicate similar clusters
+    vc = df_nolink['keyword'].value_counts()
+    dups = vc[vc > 1]
+    dup_lst = list(dups.index[:])    
+    for dup_word in dup_lst:
+        dup_key_lst = list(df_nolink[df_nolink['keyword']==dup_word]['key'])
+        try:
+            df = df.replace(dup_key_lst[1:],dup_key_lst[0])
+        except:
+            print(dup_word)
+    new_df = df.drop_duplicates()     
+    return new_df, df
+
+def merge_topic_cluster(df):
+    new_df = df[df['_type']!= 'link']
+    #merge/deduplicate similar topic/clusters
+    new_df['keyword'] = new_df['keyword'].apply(remove_underscore)
+    vc_2 = new_df['keyword'].value_counts()
+    dups_2 = vc_2[vc_2 > 1]
+    dup_lst_2 = list(dups_2.index[:])
+    
+    for dup_word in dup_lst_2:
+        try:
+            df_tbd = new_df[new_df['keyword'] == dup_word]
+            cluster_key = list(df_tbd[df_tbd['type']=='Cluster']['key'])[0]
+            topic_key = list(df_tbd[df_tbd['type']=='Topic']['key'])[0]
+            new_df = new_df.replace(topic_key, cluster_key)
+            index_to_drop = df_tbd[df_tbd['type']=='Topic'].index[0]
+            new_df.drop([index_to_drop], inplace=True)
+        except:
+            print(df_tbd)
+    return new_df, df
+
 def split_topic_link(df, link_key_val):
     df['reference'] = ''
     df_pre_topic = df[['key',
@@ -2479,6 +2526,7 @@ def split_topic_link(df, link_key_val):
     df_topic = df_pre_topic.iloc[:,:6]
     df_topic.rename(columns={"key": "_key", "type":"_type", "keyword": "title"}, inplace=True)
     df_topic['title'] = df_topic['title'].apply(capitalize_first_letter)
+    df_topic['title'] = df_topic['title'].apply(remove_underscore)
     df_topic['definition'] = df_topic['definition'].apply(capitalize_first_letter)
     
     df_link = df[['_type','name','_from', '_to']]
@@ -2555,11 +2603,14 @@ def main():
 	df_clean = read_clean('wos_data.csv')
 	print("WordNet Extraction and Connecting Nodes")
 	df = connect_nodes(df_clean, new_topics, topic_key_val)
+	print("Removing and Merging duplicates")
+	new_df, df = remove_duplicates(df)
+	merged_df, new_df = merge_topic_cluster(new_df)
 	print("Splitting topic and links")
-	df_topic, df_link = split_topic_link(df, link_key_val)
+	df_topic, df_link = split_topic_link(merged_df, link_key_val)
 	print("Combining jsons")
 	new_topics, new_links, topic_key_val,link_key_val = protocol_a_combine(df_topic, df_link, new_topics, new_links)
-	
+
 	print("Outputting to files")
 	# Output topics to file
 	output_to_file(new_topics, 'output/combined_topics.json')
