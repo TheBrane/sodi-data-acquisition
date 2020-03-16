@@ -1108,6 +1108,7 @@ class Convert_Researchers():
 	def convert_researchers(self, data, topic_key_val, link_key_val):
 		researcher_topics = list()
 		researcher_links = list()
+		topics = dict()
 
 		for rowidx in range(len(data)):
 			# Get current row in dataset
@@ -1142,18 +1143,20 @@ class Convert_Researchers():
 				# Look for duplicates
 				possible_duplicates = []
 				duplicate = False
-				for topic in researcher_topics:
-					if topic['title'] == title:
+
+				set_to_search = topics.get(title)
+				if set_to_search != None:
+					for topic in set_to_search:
 						# If the orcid IDs match and we can't deduplicate
-						if (topic['orcidID'] == orcid_id and orcid_id == ""):
+						if (topic['title'] == title and topic['orcidID'] == orcid_id and orcid_id == ""):
 							topic['Possible_Duplicates'].append(topic_key)
 							possible_duplicates.append(topic['_key'])
-						elif (topic['orcidID'] == orcid_id and orcid_id != ""):
+						elif (topic['title'] == title and topic['orcidID'] == orcid_id and orcid_id != ""):
 							# This is a duplicate based on orcid id - we don't need to store it
 							duplicate = True
-				# Skip making a topic for this author
-				if (duplicate):
-					continue
+					# Skip making a topic for this author
+					if (duplicate):
+						continue
 
 				# Output topic to JSON format
 				topic_json_struct = {}
@@ -1170,8 +1173,12 @@ class Convert_Researchers():
 				topic_json_struct['orcidID'] = orcid_id
 				topic_json_struct['Possible_Duplicates'] = possible_duplicates
 
-				# Store in list to output at end
-				researcher_topics.append(topic_json_struct)
+				if (topics.get(title) == None):
+					new_researchers = list()
+					new_researchers.append(topic_json_struct)
+					topics[title] = new_researchers
+				else:
+					topics[title].append(topic_json_struct)
 
 				link_key = 'L' + str(link_key_val)
 				# Increment key value for next link
@@ -1188,6 +1195,9 @@ class Convert_Researchers():
 
 				# Store in list to output at end
 				researcher_links.append(link_json_struct)
+		for title, topic_json_struct_set in topics.items():
+			for topic in topic_json_struct_set:
+				researcher_topics.append(topic)
 		return researcher_topics, researcher_links, topic_key_val, link_key_val
 
 class Convert_Publications():
