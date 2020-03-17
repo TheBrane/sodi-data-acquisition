@@ -26,9 +26,6 @@ class Convert_Clusters():
 		cluster_links = list()
 		properties = dict()
 
-		final_topic = 0
-		final_link = 0
-
 		# Create generic properties
 		properties['_key'] = ''
 		properties['_type'] = ''
@@ -48,7 +45,7 @@ class Convert_Clusters():
 		# T1
 		properties['_key'] = 'T1'
 		properties['_type'] = 'system'
-		properties['title'] = "ISS research ecosystem"
+		properties['title'] = "Web of Science"
 		cluster_topics.append(self.create_topic(properties))
 		# T2
 		properties['_key'] = 'T2'
@@ -161,7 +158,7 @@ class Convert_Clusters():
 		# T22
 		properties['_key'] = 'T22'
 		properties['_type'] = 'cluster'
-		properties['title'] = "Other research organization"
+		properties['title'] = "Research organization"
 		cluster_topics.append(self.create_topic(properties))
 		# T23
 		properties['_key'] = 'T23'
@@ -171,362 +168,22 @@ class Convert_Clusters():
 		# T24
 		properties['_key'] = 'T24'
 		properties['_type'] = 'cluster'
-		properties['title'] = "Web of Science Keyword"
+		properties['title'] = "Keyword"
 		cluster_topics.append(self.create_topic(properties))
 		# T25
 		properties['_key'] = 'T25'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Tagged Web of Science Keyword'
+		properties['title'] = "Tagged Keyword"
 		cluster_topics.append(self.create_topic(properties))
 		# T26
 		properties['_key'] = 'T26'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'Untagged Web of Science Keyword'
-		cluster_topics.append(self.create_topic(properties))
-		# T27
-		properties['_key'] = 'T27'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'ISS Investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T29
-		properties['_key'] = 'T29'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Space agency'
-		cluster_topics.append(self.create_topic(properties))
-		# T30
-		properties['_key'] = 'T30'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Sponsoring organization'
-		cluster_topics.append(self.create_topic(properties))
-		# T31
-		properties['_key'] = 'T31'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Principal investigator'
-		cluster_topics.append(self.create_topic(properties))
-		# T32
-		properties['_key'] = 'T32'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'City'
-		cluster_topics.append(self.create_topic(properties))
-		# T33
-		properties['_key'] = 'T33'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'State'
-		cluster_topics.append(self.create_topic(properties))
-		# T34
-		properties['_key'] = 'T34'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Country'
-		cluster_topics.append(self.create_topic(properties))
-		# T35
-		properties['_key'] = 'T35'
-		properties['_type'] = 'property'
-		properties['title'] = 'Operations location'
-		cluster_topics.append(self.create_topic(properties))
-		# T36
-		properties['_key'] = 'T36'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Academic activity'
-		cluster_topics.append(self.create_topic(properties))
-		# T37
-		properties['_key'] = 'T37'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Location'
-		cluster_topics.append(self.create_topic(properties))
-		# T39
-		properties['_key'] = 'T39'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Biology and Biotechnology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T40
-		properties['_key'] = 'T40'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Animal Biology - Invertebrates investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T41
-		properties['_key'] = 'T41'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Animal Biology - Vertebrates investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T42
-		properties['_key'] = 'T42'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Cellular Biology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T43
-		properties['_key'] = 'T43'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Macromolecular Crystal Growth investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T44
-		properties['_key'] = 'T44'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Microbiology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T45
-		properties['_key'] = 'T45'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Microencapsulation investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T46
-		properties['_key'] = 'T46'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Plant Biology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T47
-		properties['_key'] = 'T47'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Vaccine Development investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T48
-		properties['_key'] = 'T48'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Earth and Space Science investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T49
-		properties['_key'] = 'T49'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Astrobiology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T50
-		properties['_key'] = 'T50'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Astrophysics investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T51
-		properties['_key'] = 'T51'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Earth Remote Sensing investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T52
-		properties['_key'] = 'T52'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Heliophysics investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T53
-		properties['_key'] = 'T53'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Educational and cultural activities investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T54
-		properties['_key'] = 'T54'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Classroom Versions of ISS Investigations investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T55
-		properties['_key'] = 'T55'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Educational Competitions investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T56
-		properties['_key'] = 'T56'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Educational Demonstrations investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T57
-		properties['_key'] = 'T57'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Student-Developed Investigations investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T58
-		properties['_key'] = 'T58'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Human Research investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T59
-		properties['_key'] = 'T59'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Bone and Muscle Physiology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T60
-		properties['_key'] = 'T60'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Cardiovascular and Respiratory Systems investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T61
-		properties['_key'] = 'T61'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Crew Healthcare Systems investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T62
-		properties['_key'] = 'T62'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Habitability and Human Factors investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T63
-		properties['_key'] = 'T63'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Human Behavior and Performance investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T64
-		properties['_key'] = 'T64'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Human Microbiome investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T65
-		properties['_key'] = 'T65'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Immune System investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T66
-		properties['_key'] = 'T66'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Integrated Physiology and Nutrition investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T67
-		properties['_key'] = 'T67'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Nervous and Vestibular Systems investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T68
-		properties['_key'] = 'T68'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Radiation Impacts on Humans investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T69
-		properties['_key'] = 'T69'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Vision investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T70
-		properties['_key'] = 'T70'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Physical science investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T71
-		properties['_key'] = 'T71'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Combustion Science investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T72
-		properties['_key'] = 'T72'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Complex Fluids investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T73
-		properties['_key'] = 'T73'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Fluid Physics investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T74
-		properties['_key'] = 'T74'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Fundamental Physics investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T75
-		properties['_key'] = 'T75'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Materials Science investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T76
-		properties['_key'] = 'T76'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Technology Development and Demonstration investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T77
-		properties['_key'] = 'T77'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Air, Water and Surface Monitoring investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T78
-		properties['_key'] = 'T78'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Avionics and Software investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T79
-		properties['_key'] = 'T79'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Characterizing Experiment Hardware investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T80
-		properties['_key'] = 'T80'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Commercial Demonstrations investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T81
-		properties['_key'] = 'T81'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Communication and Navigation investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T82
-		properties['_key'] = 'T82'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Fire Suppression and Detection investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T83
-		properties['_key'] = 'T83'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Food and Clothing Systems investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T84
-		properties['_key'] = 'T84'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Imaging Technology investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T85
-		properties['_key'] = 'T85'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Life Support Systems and Habitation investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T86
-		properties['_key'] = 'T86'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Microbial Populations in Spacecraft investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T87
-		properties['_key'] = 'T87'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Microgravity Environment Measurement investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T88
-		properties['_key'] = 'T88'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Radiation Measurements and Shielding investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T89
-		properties['_key'] = 'T89'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Repair and Fabrication Technologies investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T90
-		properties['_key'] = 'T90'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Robotics investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T91
-		properties['_key'] = 'T91'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Small Satellites and Control Technologies investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T92
-		properties['_key'] = 'T92'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Space Structures investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T93
-		properties['_key'] = 'T93'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Spacecraft and Orbital Environments investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T94
-		properties['_key'] = 'T94'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Spacecraft Materials investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T95
-		properties['_key'] = 'T95'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Thermal Management Systems investigation'
-		cluster_topics.append(self.create_topic(properties))
-		# T96
-		properties['_key'] = 'T96'
-		properties['_type'] = 'cluster'
-		properties['title'] = 'Wordnet ontology'
+		properties['title'] = "Untagged Keyword"
 		cluster_topics.append(self.create_topic(properties))
 		# T97
 		properties['_key'] = 'T97'
 		properties['_type'] = 'cluster'
-		properties['title'] = 'University'
+		properties['title'] = "Wordnet ontology"
 		cluster_topics.append(self.create_topic(properties))
 
 		# Change this if more topics added!
@@ -550,13 +207,13 @@ class Convert_Clusters():
 		properties['_key'] = 'L2'
 		properties['_type'] = 'encompasses'
 		properties['_from'] = 'T1'
-		properties['_to'] = 'T27'
+		properties['_to'] = 'T4'
 		cluster_links.append(self.create_link(properties))
 		# L3
 		properties['_key'] = 'L3'
 		properties['_type'] = 'encompasses'
 		properties['_from'] = 'T1'
-		properties['_to'] = 'T36'
+		properties['_to'] = 'T10'
 		cluster_links.append(self.create_link(properties))
 		# L4
 		properties['_key'] = 'L4'
@@ -594,25 +251,25 @@ class Convert_Clusters():
 		properties['_from'] = 'T4'
 		properties['_to'] = 'T8'
 		cluster_links.append(self.create_link(properties))
-		# L10	
+		# L10
 		properties['_key'] = 'L10'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T4'
 		properties['_to'] = 'T9'
 		cluster_links.append(self.create_link(properties))
-		# L11	
+		# L11
 		properties['_key'] = 'L11'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T10'
 		properties['_to'] = 'T11'
 		cluster_links.append(self.create_link(properties))
-		# L12	
+		# L12
 		properties['_key'] = 'L12'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T10'
 		properties['_to'] = 'T12'
 		cluster_links.append(self.create_link(properties))
-		# L13	
+		# L13
 		properties['_key'] = 'L13'
 		properties['_type'] = 'hasSubclass'
 		properties['_from'] = 'T10'
@@ -648,413 +305,10 @@ class Convert_Clusters():
 		properties['_from'] = 'T24'
 		properties['_to'] = 'T26'
 		cluster_links.append(self.create_link(properties))
-		# L19
-		properties['_key'] = 'L19'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T21'
-		properties['_to'] = 'T29'
-		cluster_links.append(self.create_link(properties))
-		# L20
-		properties['_key'] = 'L20'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T21'
-		properties['_to'] = 'T30'
-		cluster_links.append(self.create_link(properties))
-		# L21
-		properties['_key'] = 'L21'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T2'
-		properties['_to'] = 'T31'
-		cluster_links.append(self.create_link(properties))
-		# L22
-		properties['_key'] = 'L22'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T37'
-		properties['_to'] = 'T32'
-		cluster_links.append(self.create_link(properties))
-		# L23
-		properties['_key'] = 'L23'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T37'
-		properties['_to'] = 'T33'
-		cluster_links.append(self.create_link(properties))
-		# L24
-		properties['_key'] = 'L24'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T37'
-		properties['_to'] = 'T34'
-		cluster_links.append(self.create_link(properties))
-		# L25
-		properties['_key'] = 'L25'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T39'
-		cluster_links.append(self.create_link(properties))
-		# L26
-		properties['_key'] = 'L26'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T48'
-		cluster_links.append(self.create_link(properties))
-		# L27
-		properties['_key'] = 'L27'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T53'
-		cluster_links.append(self.create_link(properties))
-		# L28
-		properties['_key'] = 'L28'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T58'
-		cluster_links.append(self.create_link(properties))
-		# L29
-		properties['_key'] = 'L29'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T70'
-		cluster_links.append(self.create_link(properties))
-		# L30
-		properties['_key'] = 'L30'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T27'
-		properties['_to'] = 'T76'
-		cluster_links.append(self.create_link(properties))
-		# L31
-		properties['_key'] = 'L31'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T40'
-		cluster_links.append(self.create_link(properties))
-		# L32
-		properties['_key'] = 'L32'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T41'
-		cluster_links.append(self.create_link(properties))
-		# L33
-		properties['_key'] = 'L33'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T42'
-		cluster_links.append(self.create_link(properties))
-		# L34
-		properties['_key'] = 'L34'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T43'
-		cluster_links.append(self.create_link(properties))
-		# L35
-		properties['_key'] = 'L35'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T44'
-		cluster_links.append(self.create_link(properties))
-		# L36
-		properties['_key'] = 'L36'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T45'
-		cluster_links.append(self.create_link(properties))
-		# L37
-		properties['_key'] = 'L37'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T46'
-		cluster_links.append(self.create_link(properties))
-		# L38
-		properties['_key'] = 'L38'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T39'
-		properties['_to'] = 'T47'
-		cluster_links.append(self.create_link(properties))
-		# L39
-		properties['_key'] = 'L39'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T48'
-		properties['_to'] = 'T49'
-		cluster_links.append(self.create_link(properties))
-		# L40
-		properties['_key'] = 'L40'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T48'
-		properties['_to'] = 'T50'
-		cluster_links.append(self.create_link(properties))
-		# L41
-		properties['_key'] = 'L41'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T48'
-		properties['_to'] = 'T51'
-		cluster_links.append(self.create_link(properties))
-		# L42
-		properties['_key'] = 'L42'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T48'
-		properties['_to'] = 'T52'
-		cluster_links.append(self.create_link(properties))
-		# L43
-		properties['_key'] = 'L43'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T53'
-		properties['_to'] = 'T54'
-		cluster_links.append(self.create_link(properties))
-		# L44
-		properties['_key'] = 'L44'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T53'
-		properties['_to'] = 'T55'
-		cluster_links.append(self.create_link(properties))
-		# L45
-		properties['_key'] = 'L45'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T53'
-		properties['_to'] = 'T56'
-		cluster_links.append(self.create_link(properties))
-		# L46
-		properties['_key'] = 'L46'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T53'
-		properties['_to'] = 'T57'
-		cluster_links.append(self.create_link(properties))
-		# L47
-		properties['_key'] = 'L47'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T59'
-		cluster_links.append(self.create_link(properties))
-		# L48
-		properties['_key'] = 'L48'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T60'
-		cluster_links.append(self.create_link(properties))
-		# L49
-		properties['_key'] = 'L49'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T61'
-		cluster_links.append(self.create_link(properties))
-		# L50
-		properties['_key'] = 'L50'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T62'
-		cluster_links.append(self.create_link(properties))
-		# L51
-		properties['_key'] = 'L51'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T63'
-		cluster_links.append(self.create_link(properties))
-		# L52
-		properties['_key'] = 'L52'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T64'
-		cluster_links.append(self.create_link(properties))
-		# L53
-		properties['_key'] = 'L53'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T65'
-		cluster_links.append(self.create_link(properties))
-		# L54
-		properties['_key'] = 'L54'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T66'
-		cluster_links.append(self.create_link(properties))
-		# L55
-		properties['_key'] = 'L55'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T67'
-		cluster_links.append(self.create_link(properties))
-		# L56
-		properties['_key'] = 'L56'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T68'
-		cluster_links.append(self.create_link(properties))
-		# L57
-		properties['_key'] = 'L57'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T58'
-		properties['_to'] = 'T69'
-		cluster_links.append(self.create_link(properties))
-		# L58
-		properties['_key'] = 'L58'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T70'
-		properties['_to'] = 'T71'
-		cluster_links.append(self.create_link(properties))
-		# L59
-		properties['_key'] = 'L59'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T70'
-		properties['_to'] = 'T72'
-		cluster_links.append(self.create_link(properties))
-		# L60
-		properties['_key'] = 'L60'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T70'
-		properties['_to'] = 'T73'
-		cluster_links.append(self.create_link(properties))
-		# L61
-		properties['_key'] = 'L61'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T70'
-		properties['_to'] = 'T74'
-		cluster_links.append(self.create_link(properties))
-		# L62
-		properties['_key'] = 'L62'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T70'
-		properties['_to'] = 'T75'
-		cluster_links.append(self.create_link(properties))
-		# L63
-		properties['_key'] = 'L63'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T77'
-		cluster_links.append(self.create_link(properties))
-		# L64
-		properties['_key'] = 'L64'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T78'
-		cluster_links.append(self.create_link(properties))
-		# L65
-		properties['_key'] = 'L65'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T79'
-		cluster_links.append(self.create_link(properties))
-		# L66
-		properties['_key'] = 'L66'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T80'
-		cluster_links.append(self.create_link(properties))
-		# L67
-		properties['_key'] = 'L67'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T81'
-		cluster_links.append(self.create_link(properties))
-		# L68
-		properties['_key'] = 'L68'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T82'
-		cluster_links.append(self.create_link(properties))
-		# L69
-		properties['_key'] = 'L69'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T83'
-		cluster_links.append(self.create_link(properties))
-		# L70
-		properties['_key'] = 'L70'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T84'
-		cluster_links.append(self.create_link(properties))
-		# L71
-		properties['_key'] = 'L71'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T85'
-		cluster_links.append(self.create_link(properties))
-		# L72
-		properties['_key'] = 'L72'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T86'
-		cluster_links.append(self.create_link(properties))
-		# L73
-		properties['_key'] = 'L73'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T87'
-		cluster_links.append(self.create_link(properties))
-		# L74
-		properties['_key'] = 'L74'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T88'
-		cluster_links.append(self.create_link(properties))
-		# L75
-		properties['_key'] = 'L75'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T89'
-		cluster_links.append(self.create_link(properties))
-		# L76
-		properties['_key'] = 'L76'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T90'
-		cluster_links.append(self.create_link(properties))
-		# L77
-		properties['_key'] = 'L77'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T91'
-		cluster_links.append(self.create_link(properties))
-		# L78
-		properties['_key'] = 'L78'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T92'
-		cluster_links.append(self.create_link(properties))
-		# L79
-		properties['_key'] = 'L79'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T93'
-		cluster_links.append(self.create_link(properties))
-		# L80
-		properties['_key'] = 'L80'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T94'
-		cluster_links.append(self.create_link(properties))
-		# L81
-		properties['_key'] = 'L81'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T76'
-		properties['_to'] = 'T95'
-		cluster_links.append(self.create_link(properties))
-		# L82
-		properties['_key'] = 'L82'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T36'
-		properties['_to'] = 'T4'
-		cluster_links.append(self.create_link(properties))
-		# L83
-		properties['_key'] = 'L83'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T36'
-		properties['_to'] = 'T10'
-		cluster_links.append(self.create_link(properties))
-		# L84
-		properties['_key'] = 'L84'
-		properties['_type'] = 'encompasses'
-		properties['_from'] = 'T1'
-		properties['_to'] = 'T96'
-		cluster_links.append(self.create_link(properties))
-		# L85
-		properties['_key'] = 'L85'
-		properties['_type'] = 'hasSubclass'
-		properties['_from'] = 'T21'
-		properties['_to'] = 'T97'
-		cluster_links.append(self.create_link(properties))
 
 		# Change this if more links added!
-		final_link = 85
+		final_link = 18
 
-		# T28, T38 missing
 		return cluster_topics, cluster_links, final_topic + 1, final_link + 1
 	def create_topic(self, properties):
 		topic_json_struct = {}
@@ -1950,7 +1204,7 @@ class Convert_Events():
 class Convert_Organizations():
 	def __init__(self):
 		print("Protocol G")
-	def post_process_organizations(self, organization_topics, organization_links, link_key_val):
+	def post_process_organizations(self, organization_topics):
 		terms = dict()
 		terms['Univ'] = 'University'
 		terms['Amer'] = 'American'
@@ -2040,25 +1294,7 @@ class Convert_Organizations():
 					word = terms.get(word) or word
 				temp_topic_title = temp_topic_title + " " + word
 			topic['title'] = temp_topic_title.strip()
-
-		for topic in organization_topics:
-			if 'University' in topic['title'] or 'College' in topic['title']:
-				# (1.1) Link to university
-				link_key = 'L' + str(link_key_val)
-				# Increment key value for next link
-				link_key_val = link_key_val + 1
-				# Output link to JSON format
-				link_json_struct = {}
-				link_json_struct['_key'] = link_key
-				link_json_struct['_type'] = 'hasInstance'
-				link_json_struct['name'] = ''
-				link_json_struct['definition'] = ''
-				link_json_struct['_from'] = 'T97' 
-				link_json_struct['_to'] = topic['_key']
-				# Store in list to output at end
-				organization_links.append(link_json_struct)
-
-		return organization_topics, organization_links, link_key_val
+		return organization_topics
 
 	# Protocol G main function to run
 	def convert_organizations(self, data, topic_key_val, link_key_val, researcher_topics, publication_topics):
@@ -2237,7 +1473,7 @@ class Convert_Organizations():
 					if (duplicated_links_dict.get((researcher_key, topic_key)) == None):
 						organization_links.append(link_json_struct)
 						duplicated_links_dict[(researcher_key, topic_key)] = 1
-		organization_topics, organization_links, link_key_val = self.post_process_organizations(organization_topics, organization_links, link_key_val)
+		organization_topics = self.post_process_organizations(organization_topics)
 		return organization_topics, organization_links, topic_key_val, link_key_val
 
 # General helper function
@@ -2280,16 +1516,11 @@ def output_to_file(info, file):
 			i = i + 1
 		f.write(']')
 
-
-
-
 """
 Protocol A 
 		Tashlin Reddy
 		March 2020 
-
 """
-
 
 #define helper functions
 def acquire_definition(keyword):
@@ -2544,7 +1775,6 @@ def protocol_a_combine(df_topic, df_link, new_topics, new_links):
     new_topics = new_topics + topic_dict
     new_links = new_links + link_dict
     return new_topics, new_links, topic_key_val, link_key_val
-
 
 def main():
 	# Create list of topics
