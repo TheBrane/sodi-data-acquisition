@@ -2981,8 +2981,7 @@ def remove_underscore(some_string):
     
 
 # read and clean function
-def read_clean(web_of_science_path):
-    df = pd.read_csv(web_of_science_path)
+def read_clean(df):
     
     df_filter = df[['TI','DE','ID' , 'DI']]
     df_filter['DE'] = df_filter['DE'].str.replace('; ', ', ')
@@ -3266,7 +3265,7 @@ def main():
 	# Protocol A
 	print("Classifying ISS Keywords")
 	print("Protocol A")
-	df_clean = read_clean('wos_data.csv')
+	df_clean = read_clean(wos_data)
 	print("WordNet Extraction and Connecting Nodes")
 	df = connect_nodes(df_clean, new_topics, topic_key_val)
 	print("Removing and Merging duplicates")
