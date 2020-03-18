@@ -1520,7 +1520,9 @@ def output_to_file(info, file):
 Protocol A 
 		Tashlin Reddy
 		March 2020 
+
 """
+
 
 #define helper functions
 def acquire_definition(keyword):
@@ -1708,8 +1710,10 @@ def connect_nodes(df_clean, dict_json, topic_key_val):
         })
     return df
 
+
 def remove_duplicates(df):
-    df_nolink = df[df['_type']!= 'link']
+    new_df = df.copy()
+    df_nolink = new_df[new_df['_type']!= 'link']
     #deduplicate similar clusters
     vc = df_nolink['keyword'].value_counts()
     dups = vc[vc > 1]
@@ -1717,10 +1721,10 @@ def remove_duplicates(df):
     for dup_word in dup_lst:
         dup_key_lst = list(df_nolink[df_nolink['keyword']==dup_word]['key'])
         try:
-            df = df.replace(dup_key_lst[1:],dup_key_lst[0])
+            new_df = new_df.replace(dup_key_lst[1:],dup_key_lst[0])
         except:
             print(dup_word)
-    new_df = df.drop_duplicates()     
+    new_df = new_df.drop_duplicates()     
     return new_df, df
 
 def merge_topic_cluster(df):
@@ -1736,12 +1740,14 @@ def merge_topic_cluster(df):
             df_tbd = new_df[new_df['keyword'] == dup_word]
             cluster_key = list(df_tbd[df_tbd['type']=='Cluster']['key'])[0]
             topic_key = list(df_tbd[df_tbd['type']=='Topic']['key'])[0]
-            new_df = new_df.replace(topic_key, cluster_key)
+            df = df.replace(topic_key, cluster_key)
             index_to_drop = df_tbd[df_tbd['type']=='Topic'].index[0]
-            new_df.drop([index_to_drop], inplace=True)
+            index_to_change = df_tbd[df_tbd['type']=='Cluster'].index[0]
+            df.loc[index_to_change]['_from'] = list(df_tbd[df_tbd['type']=='Topic']['_from'])[0]
+            df.drop([index_to_drop], inplace=True)
         except:
             print(df_tbd)
-    return new_df, df
+    return df
 
 def split_topic_link(df, link_key_val):
     df['reference'] = ''
@@ -1835,7 +1841,7 @@ def main():
 	df = connect_nodes(df_clean, new_topics, topic_key_val)
 	print("Removing and Merging duplicates")
 	new_df, df = remove_duplicates(df)
-	merged_df, new_df = merge_topic_cluster(new_df)
+	merged_df = merge_topic_cluster(new_df)
 	print("Splitting topic and links")
 	df_topic, df_link = split_topic_link(merged_df, link_key_val)
 	print("Combining jsons")
