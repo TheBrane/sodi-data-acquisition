@@ -45,8 +45,6 @@ def extract_entry(entry):
 			new_entry['topics_to_topics'] = entry[key]
 		elif ('(qlp)' in key):
 			new_entry['topics_to_properties'] = entry[key]
-		else:
-			print(key)
 
 	if new_entry['last_name'] != None:
 		new_entry['person_name'] = new_entry['first_name'] + ' ' + new_entry['last_name']
@@ -65,51 +63,65 @@ def extract_graph_data(str):
 
 	return graph_name, definition, reference
 
+
+def extract_titles(temp_dict):
+	titles = list()
+	for idx, val in enumerate(temp_dict):
+		if (len(val) > 3):
+			titles.append(val[:-3].strip())
+	return titles
+
 def extract_clusters(str, type1, type2, type3, type4, type5):
 	# Title - <definition>, Title - <definition>
 	# Regex gets a list of the titles
-	expected_clusters = 1
-	if type2 != 'None':
-		expected_clusters += 1
-	if type3 != 'None':
-		expected_clusters += 1
-	if type4 != 'None':
-		expected_clusters += 1
-	if type5 != 'None':
-		expected_clusters += 1
-		
+
 	# Assume Title - <definition>
 	p = re.compile(r'[A-Za-z 0-9]+ - <')
-	c_titles_temp = (p.findall(str))
-	if (len(c_titles_temp) != expected_clusters):
-		# Try Title- <definition>
-		p = re.compile(r'[A-Za-z 0-9]+- <')
-		c_titles_temp = (p.findall(str))
-		if (len(c_titles_temp) != expected_clusters):
-			# Try Title -<definition>
-			p = re.compile(r'[A-Za-z 0-9]+ -<')
-			c_titles_temp = (p.findall(str))
-			if (len(c_titles_temp) != expected_clusters):
-				# Try Title-<definition> (errors may occur)
-				p = re.compile(r'[A-Za-z 0-9]+-<')
-				c_titles_temp = (p.findall(str))
-				print("Potential issue with extracting clusters from " + str)
+	c_titles_temp = extract_titles((p.findall(str)))
+	# Try Title- <definition>
+	p = re.compile(r'[A-Za-z 0-9]+- <')
+	c_titles_temp2 = extract_titles(p.findall(str))
+	for t in c_titles_temp2:
+		if t not in c_titles_temp:
+			c_titles_temp.append(t)
+	# Try Title -<definition>
+	p = re.compile(r'[A-Za-z 0-9]+ -<')
+	c_titles_temp3 = extract_titles(p.findall(str))
+	for t in c_titles_temp3:
+		if t not in c_titles_temp:
+			c_titles_temp.append(t)
+	# Try Title-<definition>
+	p = re.compile(r'[A-Za-z 0-9]+-<')
+	c_titles_temp4 = extract_titles(p.findall(str))
+	for t in c_titles_temp4:
+		if t not in c_titles_temp:
+			c_titles_temp.append(t)
 
+	# Order of list matters, so can't use a set
 
 	clusters = dict()
 	for idx, val in enumerate(c_titles_temp):
 		props = dict()
-		c_title = val[:-3].strip()
+		c_title = val.strip()
 		if idx != len(c_titles_temp) - 1:
-			definition = str[str.find(val) + len(val) - 1: str.find(c_titles_temp[idx + 1]) - 1]
+			title_index = str.find(val)
+			if (title_index != 0):
+				print("Potential error parsing " + c_title)
+			start_index = str.find('<', (title_index) + len(val))
+			end_index = str.find(c_titles_temp[idx + 1])
+			end_index = str.rfind('>', start_index, end_index) + 1
+			definition = str[start_index : end_index]
 			str = str.replace(definition + ',', '')
-			str = str.replace(val[:-1].strip(), '').strip()
+			str = str.replace(definition + ' ,', '')
+			str = str.replace(val + "-", '').strip()
+			str = str.replace(val + " -", '').strip()
 		else:
-			str = str.replace(val[:-1].strip(), '').strip()
-			definition = str
+			str = str.replace(val, '').strip()
+			definition = str[str.find('<') : ]
 		# Remove < and > 
-		definition = definition[1:-1]
-		props['definition'] = definition
+		if (len(definition) > 2):
+			definition = definition[1:-1]
+			props['definition'] = definition
 
 		if idx == 0:
 			props['cluster_type'] = type1
@@ -122,7 +134,8 @@ def extract_clusters(str, type1, type2, type3, type4, type5):
 		elif idx == 4:
 			props['cluster_type'] = type5
 
-		clusters[c_title] = props
+		if c_title != "":
+			clusters[c_title] = props
 
 	return clusters
 
@@ -133,33 +146,24 @@ def extract_properties(str):
 		val = val.strip()
 		if '(' in val and ')' in val:
 			valueType = val[val.find('(') + 1 : val.find(')')]
-			val = val[ : val.find(valueType) - 2]
+			val = val[ : val.find(valueType) - 1].strip()
 		else:
 			valueType = 'string'
 
-		properties[val] = valueType
+		if val != "" and valueType != "":
+			properties[val] = valueType
 
 	return properties
 
 def extract_topics(str):
 	topics = dict()
-
-	p = re.compile(r'[A-Za-z 0-9]+ - <')
-	t_titles_temp = (p.findall(str))
-	for idx, val in enumerate(t_titles_temp):
-		props = dict()
-		t_title = val[:-4].strip()
-		if idx != len(t_titles_temp) - 1:
-			definition = str[str.find(val) + len(val) - 1: str.find(t_titles_temp[idx + 1]) - 1]
-			str = str.replace(definition + ',', '')
-			str = str.replace(val[:-1].strip(), '').strip()
+	# Exact same format as extract_clusters, so might as well reuse code
+	vals = extract_clusters(str, "", "", "", "", "")
+	for val, props in vals.items():
+		if props.get('definition') != None:
+			topics[val] = props['definition']
 		else:
-			str = str.replace(val[:-1].strip(), '').strip()
-			definition = str
-		# Remove < and > 
-		definition = definition[1:-1]
-		topics[t_title] = definition
-
+			topics[val] = ""
 	return topics
 
 def extract_t2t_links(str, topic_title_to_key):
@@ -235,19 +239,33 @@ def extract_t2p_links(str, property_title_to_key, topic_title_to_key):
 		for title, key in property_title_to_key.items():
 			line = line.replace(title, key)
 
-		attribs = line.split(' - ')
+		attribs = line.split('-')
 		if (len(attribs) < 3):
+			print("Error on line  " + line)
 			continue
-		else:
-			from_ = attribs[0].strip()
-			to_ = attribs[1].strip()
-			value = attribs[2].strip()
-			if (len(attribs) > 3):
-				for a in attribs[3:]:
-					value += a
-			links.append([from_, to_, value])
+
+		from_ = attribs[0].strip()
+		to_ = attribs[1].strip()
+		value = attribs[2].strip()
+		if (len(attribs) > 3):
+			for a in attribs[3:]:
+				value += a
+		links.append([from_, to_, value])
 
 	return links
+
+def valid_link(from_, to_):
+	if (len(from_) <= 1 or len(to_) <= 1):
+		return False
+	if (from_[0] != 'T' or to_[0] != 'T'):
+		return False
+	try:
+		intf = int(from_[1:])
+		intt = int(to_[1:])
+	except Exception as e:
+		return False
+
+	return True
 
 def new_topic_key(topic_key_val):
 	return 'T' + str(topic_key_val), topic_key_val + 1
@@ -276,7 +294,6 @@ def output_to_file(info, file):
 				f.write('\n')
 			i = i + 1
 		f.write(']')
-
 
 def main():
 	form_api_url = 'https://v2-api.sheety.co/d065448ba1539c7a59b5a8aa995d4ee2/braneSheetConversion/formResponses1'
@@ -434,7 +451,7 @@ def main():
 			from_ = t2t_link[0]
 			to_ = t2t_link[1]
 			link_type = determine_link_name(topic_key_to_type.get(from_), topic_key_to_type.get(to_))
-			if link_type != "":
+			if link_type != "" and valid_link(from_,to_):
 				link_key, link_key_val = new_link_key(link_key_val)
 				link_params = {'_key': link_key,'_type': 'link', '_from': from_, '_to': to_, 'name': link_type}
 				new_links.append(create_link(link_params))
@@ -444,9 +461,10 @@ def main():
 			from_ = t2p_link[0]
 			to_ = t2p_link[1]
 			value = t2p_link[2]
-			link_key, link_key_val = new_link_key(link_key_val)
-			link_params = {'_key': link_key,'_type': 'has', '_from': from_, '_to': to_, 'value': value}
-			new_links.append(create_link(link_params))
+			if valid_link(from_, to_):
+				link_key, link_key_val = new_link_key(link_key_val)
+				link_params = {'_key': link_key,'_type': 'has', '_from': from_, '_to': to_, 'value': value}
+				new_links.append(create_link(link_params))
 
 		print("Outputting to files")
 		# Output topics to file
@@ -455,6 +473,5 @@ def main():
 		output_to_file(new_topics, topic_filename)
 		output_to_file(new_links, link_filename)
 	
-
 if __name__ == '__main__':
 	main()
