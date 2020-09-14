@@ -4,9 +4,9 @@ Created on Sun Sep 13 16:34:14 2020
 
 @author: Rishabh Rajiv
 """
-#Initial setup: connecting to ArangoDB using python-arango driver
-#https://www.arangodb.com/docs/stable/drivers/
-#Creating a graph using YAGO - WordnetDomainHierarchy
+# Initial setup: connecting to ArangoDB using python-arango driver
+# https://www.arangodb.com/docs/stable/drivers/
+# Creating a graph using YAGO - WordnetDomainHierarchy
 
 from arango import ArangoClient
 
@@ -42,7 +42,6 @@ WordnetDomain.insert({'_key': '11','Domain': 'wordnetDomain_engineering', 'label
 cursor = db.aql.execute('FOR doc IN WordnetDomain RETURN doc')
 domain_names = [document['Domain'] for document in cursor]
 
-
 # Create a new graph named "DomainHierarchy".
 graph = db.create_graph('DomainHierarchy')
 
@@ -56,7 +55,7 @@ narrower = graph.create_edge_definition(
     to_vertex_collections=['WordnetDomain']
 )
 
-#Create edge label(skos:narrower) for RDF predicate.
+# Create edge label(skos:narrower) for RDF predicate.
 # Insert edge documents into "narrower" edge collection.
 narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/02', 'label': 'skos:narrower'})
 narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/03', 'label': 'skos:narrower'})
@@ -69,4 +68,9 @@ narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/09', 'label'
 narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/10', 'label': 'skos:narrower'})
 narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/11', 'label': 'skos:narrower'})
 
-
+# Traverse the graph in outbound direction, breadth-first.
+result = graph.traverse(
+    start_vertex='WordnetDomain/01',
+    direction='outbound',
+    strategy='breadthfirst'
+)
