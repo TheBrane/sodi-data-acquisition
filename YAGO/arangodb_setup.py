@@ -55,18 +55,18 @@ narrower = graph.create_edge_definition(
     to_vertex_collections=['WordnetDomain']
 )
 
-# Create edge label(skos:narrower) for RDF predicate.
+# Create edge label 'RDF' to save RDF triples TSV.
 # Insert edge documents into "narrower" edge collection.
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/02', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/03', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/04', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/05', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/06', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/07', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/08', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/09', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/10', 'label': 'skos:narrower'})
-narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/11', 'label': 'skos:narrower'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/02', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_doctrines>'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/03', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_free_time>'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/04', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_applied_science>'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/05', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_pure_science>'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/06', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_social_science>'})
+narrower.insert({'_from': 'WordnetDomain/01', '_to': 'WordnetDomain/07', 'RDF': '<wordnetDomain_top>	skos:narrower	<wordnetDomain_factotum>'})
+narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/08', 'RDF': '<wordnetDomain_pure_science>	skos:narrower	<wordnetDomain_mathematics>'})
+narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/09', 'RDF': '<wordnetDomain_pure_science>	skos:narrower	<wordnetDomain_physics>'})
+narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/10', 'RDF': '<wordnetDomain_applied_science>	skos:narrower	<wordnetDomain_computer_science>'})
+narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/11', 'RDF': '<wordnetDomain_applied_science>	skos:narrower	<wordnetDomain_engineering>'})
 
 # Traverse the graph in outbound direction, breadth-first.
 result = graph.traverse(
