@@ -25,6 +25,9 @@ db = client.db('SODI_test', username='root', password='xxxxxx')
 # Create a new collection named "WordnetDomain".
 WordnetDomain = db.create_collection('WordnetDomain')
 
+# Add a hash index to the collection.
+WordnetDomain.add_hash_index(fields=['Domain'], unique=True)
+
 # Insert new documents into the collection.
 WordnetDomain.insert({'_key': '01','Domain': 'wordnetDomain_top', 'label': 'Top'})
 WordnetDomain.insert({'_key': '02','Domain': 'wordnetDomain_doctrines', 'label': 'Doctrines'})
