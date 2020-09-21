@@ -14,13 +14,13 @@ from arango import ArangoClient
 client = ArangoClient(hosts='http://localhost:8529')
 
 # Connect to "_system" database as root user.
-sys_db = client.db('_system', username='root', password='xxxxxx')
+sys_db = client.db('_system', username='root', password='')
 
 # Create a new database named "SODI_test".
 sys_db.create_database('SODI_test')
 
 # Connect to "SODI_test" database as root user.
-db = client.db('SODI_test', username='root', password='xxxxxx')
+db = client.db('SODI_test', username='root', password='')
 
 # Create a new collection named "WordnetDomain".
 WordnetDomain = db.create_collection('WordnetDomain')
