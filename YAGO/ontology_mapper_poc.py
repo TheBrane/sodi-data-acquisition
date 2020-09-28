@@ -131,7 +131,7 @@ def triples_generator(endpoint_url, sparql_query, result_format='json'):
 # def vocab_mapper():
 
 
-def create_nodes(uri, typ):
+def create_nodes(uri, typ, data=None):
     """
     Parameters
     ----------
@@ -139,6 +139,8 @@ def create_nodes(uri, typ):
         Resource identifier for RDF subject or object, typically URL.
     typ : str
         Resource type as defined by the schema, ontology.
+    data : dict, default is None
+        Additional data to enrich the node, like label, sameas, text, etc.
 
     Returns
     -------
@@ -154,21 +156,20 @@ def create_nodes(uri, typ):
         if typ == 'http://schema.org/Person':
             # Get the API wrapper for a collection.
             collec = db.collection('Person')
-            aq='FOR doc IN Person FILTER doc.URI=="'+str(uri)+'"RETURN doc._id'
+            aq='FOR doc IN Person FILTER doc.URI=="'+str(uri)+'" OR doc.sameas=="'+str(uri)+'" RETURN doc._id'
         elif typ == 'http://schema.org/CreativeWork':
             collec = db.collection('Works')
-            aq='FOR doc IN Works FILTER doc.URI=="'+str(uri)+'"RETURN doc._id'
+            aq='FOR doc IN Works FILTER doc.URI=="'+str(uri)+'" OR doc.sameas=="'+str(uri)+'" RETURN doc._id'
         # Execute AQL query to DB
-        cursor = db.aql.execute(aq)
-        data = list(cursor)
+        cursor = list(db.aql.execute(aq))
         # If URI not found in DB, create
-        if len(data) == 0:
-            metadata = collec.insert({'URI': uri, 'type': typ})
+        if len(cursor) == 0:
+            metadata = collec.insert({'URI': uri, 'type': typ, 'sameas': ''})
             ID = metadata['_id']
             print(ID, "created")
         else:
             # update logic TBD
-            ID = str(data[0])
+            ID = str(cursor[0])
             print(ID, "updated")
 
     except (DocumentInsertError):
@@ -243,8 +244,36 @@ def ontology_mapper(triples, ontology_lookup):
     return edges
 
 
+def namespace_sameas(uri, uri_dup):
+    """
+    Parameters
+    ----------
+    uri : str
+        Resource identifier for RDF subject or object, typically URL.
+    uri_dup : str
+        Same resource using different namespace identifier, duplicate URI .
+
+    Returns
+    -------
+    cursor : list
+        List of updated node, 'sameas' field value.
+    """
+    # Initialize the client for ArangoDB.
+    db = intialize_client()
+    # Get the AQL API wrapper.
+    aql = db.aql
+    for collec in ('Person', 'Works'):
+        coll = db.collection(collec)
+        aql='FOR doc IN '+str(collec)+' FILTER doc.URI=="'+str(uri)+'"RETURN doc._id'
+        cursor = list(db.aql.execute(aql))
+        if len(cursor) != 0:
+            coll.update_match({'_id': cursor[0]}, {'sameas': uri_dup})
+            print('updated sameas', cursor, uri, uri_dup)
+    return cursor
+
+
 def main():
-    intialize_database('SODI_DEV', 'root', 'Cro$$refkg')
+    intialize_database('SODI_DEV', 'root', 'xxxxxx')
     # define ontology lookup mapping sheet
     ontology_lookup = {'predicate':
                        ['subject_type', 'predicate_alt', 'object_type'],
@@ -268,16 +297,7 @@ def main():
       ?person rdfs:label "Tupac Shakur"@en .
       ?songs schema:lyricist  ?person.
     }
-    LIMIT 10"""
-
-    # Construct a graph of Tupac Shakur and associated artists from DBpedia
-    dbp_qry = """CONSTRUCT {?value
-    <http://dbpedia.org/ontology/associatedMusicalArtist> ?resource}
-    WHERE {
-    ?value rdfs:label "Tupac Shakur"@en .
-    ?resource <http://dbpedia.org/ontology/associatedMusicalArtist> ?value }
-    ORDER BY ?resource ?value
-    LIMIT 10"""
+    LIMIT 5"""
 
     result1 = triples_generator(yago_url, yago_qry)
 
@@ -285,7 +305,42 @@ def main():
     edges = ontology_mapper(result1, ontology_lookup)
     print(edges)
 
+    # Construct a graph of MC Hammer songs (lyricist of) from YAGO
+    yago_qry2 = """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX schema: <http://schema.org/>
+    CONSTRUCT { ?songs schema:lyricist  ?person. }
+          WHERE {
+          ?person rdfs:label "MC Hammer"@en .
+          ?songs schema:lyricist  ?person.
+        }
+    LIMIT 5"""
+
+    result3 = triples_generator(yago_url, yago_qry2)
+    edges3 = ontology_mapper(result3, ontology_lookup)
+    print(edges3)
+
+    # Construct a graph of Tupac Shakur and associated artists from DBpedia
+    dbp_qry = """CONSTRUCT {?value
+    <http://dbpedia.org/ontology/associatedMusicalArtist> ?resource}
+    WHERE {
+    ?value rdfs:label "Tupac Shakur"@en .
+    ?resource <http://dbpedia.org/ontology/associatedMusicalArtist> ?value }
+    LIMIT 10"""
+
+    namespace_sameas('http://yago-knowledge.org/resource/Tupac_Shakur',
+                     'http://dbpedia.org/resource/Tupac_Shakur')
+    namespace_sameas('http://yago-knowledge.org/resource/MC_Hammer',
+                     'http://dbpedia.org/resource/MC_Hammer')
     result2 = triples_generator(dbp_url, dbp_qry)
+    # cleanse labels, 's' to 'subject'
+    for triple in result2:
+        triple['subject'] = triple.pop('s')
+        triple['predicate'] = triple.pop('p')
+        triple['object'] = triple.pop('o')
+
+    edges2 = ontology_mapper(result2, ontology_lookup)
+    print(edges2)
 
 
 if __name__ == "__main__":
