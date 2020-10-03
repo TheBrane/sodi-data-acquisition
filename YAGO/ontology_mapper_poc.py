@@ -114,9 +114,8 @@ def triples_generator(endpoint_url, sparql_query, result_format='json'):
     results = sparql.query().convert()
     if result_format == 'json':
         # cleanse, extract triples from JSON response
-        result = results.get('results')
-        result = result.get('bindings')
-        return result
+        results = results.get('results').get('bindings')
+        return results
     elif result_format == 'xml':
         return results.toxml()
     elif result_format == 'rdf+xml':
@@ -160,7 +159,7 @@ def create_nodes(uri, typ, data=None):
         elif typ == 'http://schema.org/CreativeWork':
             collec = db.collection('Works')
             aq='FOR doc IN Works FILTER doc.URI=="'+str(uri)+'" OR doc.sameas=="'+str(uri)+'" RETURN doc._id'
-        # Execute AQL query to DB
+        # Execute AQL query to match existing records in DB
         cursor = list(db.aql.execute(aq))
         # If URI not found in DB, create
         if len(cursor) == 0:
@@ -168,7 +167,8 @@ def create_nodes(uri, typ, data=None):
             ID = metadata['_id']
             print(ID, "created")
         else:
-            # update logic TBD
+            # update node with additional data
+            collec.update_match({'_id': cursor[0]}, {'data': data})
             ID = str(cursor[0])
             print(ID, "updated")
 
@@ -199,13 +199,25 @@ def create_edges(from_id, to_id, triple):
         server response from creation of edge, contains _key, _id, etc.
     """
     db = intialize_client()
+    # Get the AQL API wrapper.
+    aql = db.aql    
     if triple[1] == 'http://schema.org/lyricist':
         # Get the API wrapper for a collection.
         edg = db.collection('creator')
+        aq='FOR doc IN creator FILTER doc._from=="'+str(from_id)+'" AND doc._to=="'+str(to_id)+'" RETURN doc._id'
     elif triple[1] == 'http://dbpedia.org/ontology/associatedMusicalArtist':
         edg = db.collection('relation')
-    e = edg.insert({'_from': from_id, '_to': to_id, 'RDF': triple})
-    print(e['_id'], "edge created")
+        aq='FOR doc IN relation FILTER doc._from=="'+str(from_id)+'" AND doc._to=="'+str(to_id)+'" RETURN doc._id'
+    # Execute AQL query to match existing records in DB
+    cursor = list(db.aql.execute(aq))  
+    # If _from and _to not found in DB, create new  
+    if len(cursor) == 0:
+        e = edg.insert({'_from': from_id, '_to': to_id, 'RDF': triple})
+        print(e['_id'], "edge created")
+    #else update triple data
+    else:
+        e = edg.update_match({'_id': cursor[0]}, {'RDF': triple})
+        print(e, "edge updated")
 
     return (from_id, to_id, e)
 
@@ -241,6 +253,7 @@ def ontology_mapper(triples, ontology_lookup):
             edges += create_edges(ID_s, ID_o, triple)
             print('------------------------------')
     print('Graph created.')
+    print('============================================================')
     return edges
 
 
@@ -304,6 +317,7 @@ def main():
     # Call ontology mapper to create nodes and edges
     edges = ontology_mapper(result1, ontology_lookup)
     print(edges)
+    print()
 
     # Construct a graph of MC Hammer songs (lyricist of) from YAGO
     yago_qry2 = """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -319,6 +333,7 @@ def main():
     result3 = triples_generator(yago_url, yago_qry2)
     edges3 = ontology_mapper(result3, ontology_lookup)
     print(edges3)
+    print()
 
     # Construct a graph of Tupac Shakur and associated artists from DBpedia
     dbp_qry = """CONSTRUCT {?value
@@ -341,7 +356,7 @@ def main():
 
     edges2 = ontology_mapper(result2, ontology_lookup)
     print(edges2)
-
+    print()
 
 if __name__ == "__main__":
     main()
