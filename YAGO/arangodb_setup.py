@@ -16,11 +16,13 @@ client = ArangoClient(hosts='http://localhost:8529')
 # Connect to "_system" database as root user.
 sys_db = client.db('_system', username='root', password='')
 
-# Create a new database named "SODI_test".
-sys_db.create_database('SODI_test')
-
+# =============================================================================
+# # Create a new database named "SODI_test".
+# sys_db.create_database('SODI_test')
+# 
+# =============================================================================
 # Connect to "SODI_test" database as root user.
-db = client.db('SODI_test', username='root', password='')
+db = client.db('SODI_TEST', username='root', password='xxxxxx')
 
 # Create a new collection named "WordnetDomain".
 WordnetDomain = db.create_collection('WordnetDomain')
@@ -40,6 +42,7 @@ WordnetDomain.insert({'_key': '08','Domain': 'wordnetDomain_mathematics', 'label
 WordnetDomain.insert({'_key': '09','Domain': 'wordnetDomain_physics', 'label': 'Physics'})
 WordnetDomain.insert({'_key': '10','Domain': 'wordnetDomain_computer_science', 'label': 'Computer Science'})
 WordnetDomain.insert({'_key': '11','Domain': 'wordnetDomain_engineering', 'label': 'Engineering'})
+WordnetDomain.insert({'_key': '12','Domain': 'wordnetDomain_machine_learning', 'label': 'Machine Learning'})
 
 # Execute an AQL query and iterate through the result cursor.
 cursor = db.aql.execute('FOR doc IN WordnetDomain RETURN doc')
@@ -70,7 +73,7 @@ narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/08', 'RDF': 
 narrower.insert({'_from': 'WordnetDomain/05', '_to': 'WordnetDomain/09', 'RDF': '<wordnetDomain_pure_science>	skos:narrower	<wordnetDomain_physics>'})
 narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/10', 'RDF': '<wordnetDomain_applied_science>	skos:narrower	<wordnetDomain_computer_science>'})
 narrower.insert({'_from': 'WordnetDomain/04', '_to': 'WordnetDomain/11', 'RDF': '<wordnetDomain_applied_science>	skos:narrower	<wordnetDomain_engineering>'})
-
+narrower.insert({'_from': 'WordnetDomain/10', '_to': 'WordnetDomain/12', 'RDF': '<wordnetDomain_computer_science>	skos:narrower	<wordnetDomain_machine_learning>'})
 # Traverse the graph in outbound direction, breadth-first.
 result = graph.traverse(
     start_vertex='WordnetDomain/01',
