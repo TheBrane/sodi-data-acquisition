@@ -9,7 +9,7 @@ from arango import ArangoClient, ArangoServerError, DocumentInsertError
 
 db_name = 'SODI_TEST'
 user = 'root'
-password = 'Cro$$refkg'
+password = 'xxxxxx'
 
 
 def intialize_database(db_name, user, password):
