@@ -4,7 +4,7 @@ Created on Sat Oct 17 2020
 
 @author: rish-r
 """
-# Extract from ma-graph and OpenCitations, load into ArangoDB KG
+# Extract from Crossref JSON files, Crossref API, load into ArangoDB KG
 from initialize_arango import *
 from ontology_mapper import *
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
