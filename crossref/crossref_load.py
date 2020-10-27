@@ -9,9 +9,10 @@ from initialize_arango import *
 from ontology_mapper import *
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
 import json
+import requests
 from pathlib import Path
 
-
+subject_type = 'http://schema.org/CreativeWork'
 
 def search_work(DOI, uri=None):
     """
@@ -101,7 +102,7 @@ def load_crossref_data(data):
     # additional data passed as fields dict
     fields = {'DOI': DOI, 'title': title, 'subject': subject,
               'work_type': work_type, 'data': data.get('message')}
-    ID = create_nodes(URL, 'http://schema.org/CreativeWork', fields)
+    ID = create_nodes(DOI, subject_type, fields)
     return ID
 
 
@@ -119,10 +120,15 @@ def load_crossref_resp(crossref_url, parameters=None):
         number of records loaded.
     """
     record_num = 0
+    ID = ""
     response = requests.get(crossref_url, params=parameters)
+    response = response.json().get('message').get('items')
+    #print(response.json().get('message').get('items'))
     for record in response:
-        ID = load_crossref_data(record)
-        print(record, 'ID :', ID)
+        DOI = record.get('DOI').upper()
+        title = str(record.get('title'))[1:-1]
+        fields = {'DOI': DOI, 'title': title, 'data': record}
+        ID = create_nodes(DOI, subject_type, fields)
         record_num += 1
     return record_num
 
@@ -136,6 +142,7 @@ def main():
     json_folder = Path("D:\SODI\Proj\AlphaGO_graph")
     crossref_url = 'https://api.crossref.org/works'
 
+    #load from crossref JSON files
     file_num = 0
     for files in json_folder.iterdir():
         with open(files) as f:
@@ -143,7 +150,24 @@ def main():
         ID = load_crossref_data(data)
         file_num += 1
         # print("created #", file_num)
-    print("Total files:", file_num)
+    print("Total number of files:", file_num)
+
+
+
+# =============================================================================
+# url = 'https://api.crossref.org/works'
+# 
+# parameters = {'query.author' : 'demis+hassabis',
+#               'rows' : 2
+#                           }
+# =============================================================================
+
+    #load from crossref API, random sample of 10 records
+    crossref_url ='http://api.crossref.org/works?sample=10'
+    parameters = {"select":"DOI,title"}
+    
+    rec = load_crossref_resp(crossref_url, parameters)
+    print('Total number of records:', rec)
 
 if __name__ == "__main__":
     main()
