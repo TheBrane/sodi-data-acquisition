@@ -4,13 +4,9 @@ Created on Mon Oct 26 17:55:52 2020
 
 @author: rish-r
 """
-
+from config import *
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
-
-db_name = 'SODI_TEST'
-user = 'root'
-password = 'xxxxxx'
-
+import json
 
 def intialize_database(db_name, user, password):
     """
@@ -96,3 +92,22 @@ def intialize_client():
     client = ArangoClient(hosts='http://localhost:8529')
     # Connect to "test" database as root user.
     return client.db(db_name, user, password)
+
+
+def intialize_memos():
+    """
+    Initializes memos used for DOI and ID lookups.
+    Improves performance by avoiding Arango AQl queries
+    Returns
+    -------
+    None.
+    """
+    memo_DOI_ID = {}
+    memo_ref_DOI = {}
+    memo_ref_ID = {}
+    memo_TBD_DOI = {}
+    json.dump(memo_DOI_ID, open("memo_DOI_ID.json", 'w'))
+    json.dump(memo_ref_DOI, open("memo_ref_DOI.json", 'w'))
+    json.dump(memo_ref_ID, open("memo_ref_ID.json", 'w'))
+    json.dump(memo_TBD_DOI, open("memo_TBD_DOI.json", 'w'))
+    return
