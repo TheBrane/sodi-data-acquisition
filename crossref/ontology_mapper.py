@@ -4,7 +4,8 @@ Created on Mon Oct 26 19:22:02 2020
 
 @author: rish-r
 """
-from initialize_arango import *
+from config import *
+from initialize_arango import intialize_client
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
 import json
 
@@ -99,6 +100,29 @@ def create_nodes(uri, typ, fields={}):
 
     return ID
 
+def create_works(uri, typ, fields={}):
+    try:
+        # Initialize the client for ArangoDB.
+        db = intialize_client()
+        # Get the AQL API wrapper.
+        aql = db.aql
+        if typ == 'http://schema.org/CreativeWork':
+            collec = db.collection('Works')
+        ID = search_works(uri)
+        para = {'URI': uri, 'type': typ, 'sameas': ''}
+        para.update(fields)
+        if ID == 0:
+            metadata = collec.insert(para)
+            ID = metadata['_id']
+            print(ID, "created")
+        else:
+            return ID
+    except (DocumentInsertError):
+        print('DocumentInsertError')
+        ID = 'error'
+        pass
+    return ID
+
 
 def create_edges(from_id, to_id, triple):
     """
@@ -150,7 +174,7 @@ def create_edges(from_id, to_id, triple):
 
     return (from_id, to_id, e)
 
-
+    
 def ontology_mapper(triples, ontology_lookup):
     """
     Parameters
@@ -237,6 +261,49 @@ def cleanse_triples(response):
         triple['predicate'] = triple.pop('p')
         triple['object'] = triple.pop('o')
     return response
+
+
+def search_works(DOI, uri=None):
+    """
+    Parameters
+    ----------
+    DOI : str
+        Digital Object Identifier, is a string of numbers, letters and symbols
+        used to permanently identify an article or document and link to it on the web.
+    uri :  str, optional
+        Resource identifier for RDF subject or object, typically URL.
+        The default is None.
+    Returns
+    -------
+    ID : str
+        Document _id from 'Work' collection.
+    """
+    DOI = str(DOI).upper()
+    # search if DOI exists in memo
+    if DOI in memo_DOI_ID:
+        return memo_DOI_ID[DOI]
+    # else query Arango DB
+    else:
+        try:
+
+            db = intialize_client()
+            # Get the AQL API wrapper.
+            aql = db.aql
+            collec = db.collection('Works')
+            aq='FOR doc IN Works FILTER doc.DOI=="'+str(DOI)+'" OR doc.URI=="'+str(uri)+'" RETURN doc._id'
+            # Execute AQL query to match existing records in DB
+            ID = list(db.aql.execute(aq))
+            if ID:
+                memo_DOI_ID[DOI] = ID[0]
+                return ID[0]
+            else:
+                print('Document', DOI, ' not found')
+                memo_TBD_DOI[DOI] = 'NA'
+                return 0
+        except IndexError as e:
+            print(e)
+            return 0
+
 
 # ontology mapping logic lookup file
 ontology_lookup = {'predicate':
