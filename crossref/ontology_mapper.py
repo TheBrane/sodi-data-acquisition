@@ -5,7 +5,7 @@ Created on Mon Oct 26 19:22:02 2020
 @author: rish-r
 """
 from config import *
-from initialize_arango import intialize_client
+from initialize_arango import *
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
 import json
 
@@ -66,10 +66,6 @@ def create_nodes(uri, typ, fields={}):
         the document across all collections within a DB.
     """
     try:
-        # Initialize the client for ArangoDB.
-        db = intialize_client()
-        # Get the AQL API wrapper.
-        aql = db.aql
         if typ == 'http://schema.org/Person':
             # Get the API wrapper for a collection.
             collec = db.collection('Person')
@@ -102,10 +98,6 @@ def create_nodes(uri, typ, fields={}):
 
 def create_works(uri, typ, fields={}):
     try:
-        # Initialize the client for ArangoDB.
-        db = intialize_client()
-        # Get the AQL API wrapper.
-        aql = db.aql
         if typ == 'http://schema.org/CreativeWork':
             collec = db.collection('Works')
         ID = search_works(uri)
@@ -146,9 +138,6 @@ def create_edges(from_id, to_id, triple):
     """
     e = []
     if from_id != to_id:
-        db = intialize_client()
-        # Get the AQL API wrapper.
-        aql = db.aql
         if triple[1] in ['http://schema.org/lyricist','http://purl.org/dc/terms/creator',
                          'https://schema.org/author']:
             # Get the API wrapper for a collection.
@@ -232,10 +221,6 @@ def namespace_sameas(uri, uri_dup):
     cursor : list
         List of updated node, 'sameas' field value.
     """
-    # Initialize the client for ArangoDB.
-    db = intialize_client()
-    # Get the AQL API wrapper.
-    aql = db.aql
     for collec in ('Person', 'Works'):
         coll = db.collection(collec)
         aql='FOR doc IN '+str(collec)+' FILTER doc.URI=="'+str(uri)+'"RETURN doc._id'
@@ -285,10 +270,6 @@ def search_works(DOI, uri=None):
     # else query Arango DB
     else:
         try:
-
-            db = intialize_client()
-            # Get the AQL API wrapper.
-            aql = db.aql
             collec = db.collection('Works')
             aq='FOR doc IN Works FILTER doc.DOI=="'+str(DOI)+'" OR doc.URI=="'+str(uri)+'" RETURN doc._id'
             # Execute AQL query to match existing records in DB

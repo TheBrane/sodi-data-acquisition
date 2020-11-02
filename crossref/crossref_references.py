@@ -12,16 +12,28 @@ from arango import ArangoClient, ArangoServerError, DocumentInsertError
 import json
 import requests
 import time
+import gzip
 from pathlib import Path
 
 
 def create_references(from_id, to_id, triple):
+    """
+    Parameters
+    ----------
+    from_id : str
+        Document _id of 'from' vertex.
+    to_id : str
+        Document _id of 'to' vertex.
+    triple : list
+        RDF triple.
+    Returns
+    -------
+    e : dict
+        server response from creation of edge, contains _key, _id, etc.
+    """
     try:
         e = {}
         if from_id != to_id:
-            db = intialize_client()
-            # Get the AQL API wrapper.
-            aql = db.aql
             if triple[1] == 'https://schema.org/citation':
                 edg = db.collection('References')
             e['_id'] = search_references(from_id, to_id)
@@ -53,9 +65,6 @@ def search_references(from_id, to_id):
     if str((from_id, to_id)) in memo_ref_ID:
         return memo_ref_ID[str((from_id, to_id))]
     else:
-        db = intialize_client()
-        # Get the AQL API wrapper.
-        aql = db.aql
         edg = db.collection('References')
         aq='FOR doc IN References FILTER doc._from=="'+str(from_id)+'" AND doc._to=="'+str(to_id)+'" RETURN doc._id'
         # Execute AQL query to match existing records in DB
@@ -82,21 +91,24 @@ def create_edges_reference(data):
     #ref_DOI_list = []
     tot_ref = cre_ref = 0
     try:
-        from_DOI = data.get('message').get('DOI', 0)
+        from_DOI = data.get('DOI', 0)
         from_ID = search_works(from_DOI)
         if from_ID != 0:
-            references = data.get('message').get('reference')
+            references = data.get('reference')
             if references is not None:
                 for ref in references:
                     to_DOI = ref.get('DOI', 0)
                     to_ID = search_works(to_DOI)
-                    print(from_ID, from_DOI, '--->', to_ID, to_DOI, 'ref#', tot_ref)
+                    #print(from_ID, from_DOI, '--->', to_ID, to_DOI, 'ref#', tot_ref)
                     if to_ID != 0:
-                        #ref_DOI_list.append(to_DOI)
-                        trip = [from_DOI, predicate_citation, to_DOI]
-                        e = create_references(from_ID, to_ID, trip)
-                        memo_ref_ID[str((from_ID, to_ID))] = e['_id']
-                        cre_ref += 1
+                        try:
+                            #ref_DOI_list.append(to_DOI)
+                            trip = [from_DOI, predicate_citation, to_DOI]
+                            e = create_references(from_ID, to_ID, trip)
+                            memo_ref_ID[str((from_ID, to_ID))] = e['_id']
+                            cre_ref += 1
+                        except:
+                            pass
                     else:
                         memo_TBD_DOI[to_DOI] = 'NA'
                     tot_ref += 1
@@ -110,18 +122,35 @@ def create_edges_reference(data):
 
 
 def main():
-    # create references edges from crossref JSON files
-    start = time.time()
-    file_num = 0
-    for files in json_folder.iterdir():
-        with open(files) as f:
-            data = json.load(f)
-        tot_ref, cre_ref = create_edges_reference(data)
-        print('#', file_num, ', File name:', files)
-        print('Total refs', tot_ref, ', Created refs', cre_ref)
-        print('============================================')
-        file_num += 1
+# =============================================================================
+#     # create references edges from crossref JSON files
+#     start = time.time()
+#     file_num = 0
+#     for files in json_folder.iterdir():
+#         with open(files) as f:
+#             data = json.load(f)
+#         tot_ref, cre_ref = create_edges_reference(data)
+#         print('#', file_num, ', File name:', files)
+#         print('Total refs', tot_ref, ', Created refs', cre_ref)
+#         print('============================================')
+#         file_num += 1
+# =============================================================================
 
+    start = time.time()
+    i = 0
+    for file in nature_folder.iterdir():
+        print(i)
+        i += 1
+        with gzip.open(file, 'rb') as f:
+            lines = json.load(f)
+        lines = lines.get('items')
+        line_num = 0
+        for data in lines:
+            tot_ref, cre_ref = create_edges_reference(data)
+            print('#', line_num)
+            print('Total refs', tot_ref, ', Created refs', cre_ref)
+            print('============================================')
+            line_num += 1
     json.dump(memo_ref_DOI, open("memo_ref_DOI.json", 'w'))
     json.dump(memo_ref_ID, open("memo_ref_ID.json", 'w'))
     json.dump(memo_TBD_DOI, open("memo_TBD_DOI.json", 'w'))

@@ -8,7 +8,7 @@ from config import *
 from arango import ArangoClient, ArangoServerError, DocumentInsertError
 import json
 
-def intialize_database(db_name, user, password):
+def initialize_database(db_name, user, password):
     """
     Parameters
     ----------
@@ -94,7 +94,7 @@ def intialize_client():
     return client.db(db_name, user, password)
 
 
-def intialize_memos():
+def initialize_memos():
     """
     Initializes memos used for DOI and ID lookups.
     Improves performance by avoiding Arango AQl queries
@@ -106,8 +106,16 @@ def intialize_memos():
     memo_ref_DOI = {}
     memo_ref_ID = {}
     memo_TBD_DOI = {}
+    memo_name_ID = {}
     json.dump(memo_DOI_ID, open("memo_DOI_ID.json", 'w'))
     json.dump(memo_ref_DOI, open("memo_ref_DOI.json", 'w'))
     json.dump(memo_ref_ID, open("memo_ref_ID.json", 'w'))
     json.dump(memo_TBD_DOI, open("memo_TBD_DOI.json", 'w'))
+    json.dump(memo_name_ID, open("memo_name_ID.json", 'w'))
     return
+
+
+# Initialize the client for ArangoDB.
+db = intialize_client()
+# Get the AQL API wrapper.
+aql = db.aql
