@@ -8,6 +8,7 @@ ___
     * Arango Server
     * Arango Shell
 2. Python 3.8 or higher
+3. Python-Arango driver https://github.com/Joowani/python-arango 
 
 ## Initial Setup
 1. Execute **arangodb_setup.py** to create an Arango database instance - Node collections, Edge collections and Graph

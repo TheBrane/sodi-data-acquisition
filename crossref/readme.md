@@ -8,6 +8,7 @@ ___
     * Arango Server
     * Arango Shell
 2. Python 3.8 or higher
+3. Python-Arango driver https://github.com/Joowani/python-arango 
 
 ## Installation, Initial Setup
 1. Modify **config.py** with credentials, folder path, etc.
